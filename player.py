@@ -30,7 +30,6 @@ class Player(pygame.sprite.Sprite):
 		else:
 			self.direction.x = 0
 
-
 	def move(self):
 		if self.direction.magnitude() != 0:
 			self.direction.normalize()
