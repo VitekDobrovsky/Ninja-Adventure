@@ -1,6 +1,7 @@
 import pygame
 from settings import *
 from tile import Tile
+from player import Player
 
 
 class Level:
@@ -20,6 +21,9 @@ class Level:
 				y = row_index * TILESIZE
 				if col == 'x':
 					Tile((x,y),[self.visible_sprites])
+				elif col == 'p':
+					self.player = Player((x,y), [self.visible_sprites])
 
 	def run(self):
 		self.visible_sprites.draw(self.screen)
+		self.visible_sprites.update()
