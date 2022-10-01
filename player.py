@@ -1,5 +1,6 @@
 import pygame
 from settings import *
+from support import import_folder
 
 
 class Player(pygame.sprite.Sprite):
@@ -17,7 +18,10 @@ class Player(pygame.sprite.Sprite):
 		self.obstacle_sprites = obstacle_sprites
 
 		# animation
-		self.status = 'down'
+		self.status = 'down_idle'
+		self.pl_assets()
+		self.frame_index = 0
+		self.frame_speed = 0.15
 
 	def input(self):
 		keys = pygame.key.get_pressed()
@@ -79,8 +83,27 @@ class Player(pygame.sprite.Sprite):
 				if self.direction.y == 0:
 					self.status += '_idle'
 
+	def pl_assets(self):
+		character_path = 'graphics/player'
+		self.animations = {'up': [],'down': [],'left': [],'right': [],
+			'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
+			'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]} 
+
+		for animation in self.animations.keys():
+			full_path = character_path + '/' + animation
+			self.animations[animation] = import_folder(full_path)
+			
+	def animate(self):
+		animation = self.animations[self.status]
+
+		self.frame_index += self.frame_speed
+		if self.frame_index >= len(animation):
+			self.frame_index = 0
+
+		self.image = animation[int(self.frame_index)]
+
 	def update(self):
 		self.input()
 		self.move()
 		self.get_status()
-		print(self.status)
+		self.animate()
