@@ -16,6 +16,9 @@ class Player(pygame.sprite.Sprite):
 		# colision
 		self.obstacle_sprites = obstacle_sprites
 
+		# animation
+		self.status = 'down'
+
 	def input(self):
 		keys = pygame.key.get_pressed()
 
@@ -57,8 +60,27 @@ class Player(pygame.sprite.Sprite):
 						self.rect.bottom = sprite.rect.top
 					if self.direction.y < 0:
 						self.rect.top = sprite.rect.bottom
-			
+		
+	def get_status(self):
+		if self.direction.y < 0:
+			self.status = 'up'
+		elif self.direction.y > 0:
+			self.status = 'down'
+		else:
+			if len(self.status) < 6:
+				if self.direction.x == 0:
+					self.status += '_idle'
+		if self.direction.x > 0:
+			self.status = 'right'
+		elif self.direction.x < 0:
+			self.status = 'left'
+		else:
+			if len(self.status) < 6:
+				if self.direction.y == 0:
+					self.status += '_idle'
 
 	def update(self):
 		self.input()
 		self.move()
+		self.get_status()
+		print(self.status)
