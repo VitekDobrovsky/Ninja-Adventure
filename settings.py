@@ -10,6 +10,10 @@ player_stats = {
 	'speed': 5
 }
 
+HITBOX_OFFSET = {
+	'player': -26,
+	'stone': -20
+}
 
 WORLD_MAP = [
 ['x','x','x','x','x','x','x','x','x','x','x','x','x','x','x','x','x','x','x','x'],

@@ -9,6 +9,7 @@ class Player(pygame.sprite.Sprite):
 		# set up
 		self.image = pygame.image.load('graphics/player/down/down_0.png')
 		self.rect = self.image.get_rect(topleft=pos)
+		self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET['player'])
 
 		# move
 		self.direction = pygame.math.Vector2()
@@ -44,26 +45,27 @@ class Player(pygame.sprite.Sprite):
 		if self.direction.magnitude() != 0:
 			self.direction.normalize()
 
-		self.rect.x += self.direction.x * self.speed
+		self.hitbox.x += self.direction.x * self.speed
 		self.colision('horizontal')
-		self.rect.y += self.direction.y * self.speed
+		self.hitbox.y += self.direction.y * self.speed
 		self.colision('vertical')
+		self.rect.center = self.hitbox.center
 
 	def colision(self, direction):
 		if direction == 'horizontal':
 			for sprite in self.obstacle_sprites:
-				if sprite.rect.colliderect(self.rect):
+				if sprite.hitbox.colliderect(self.hitbox):
 					if self.direction.x > 0:
-						self.rect.right = sprite.rect.left
+						self.hitbox.right = sprite.hitbox.left
 					if self.direction.x < 0:
-						self.rect.left = sprite.rect.right
+						self.hitbox.left = sprite.hitbox.right
 		elif direction == 'vertical':
 			for sprite in self.obstacle_sprites:
-				if sprite.rect.colliderect(self.rect):
+				if sprite.hitbox.colliderect(self.hitbox):
 					if self.direction.y > 0:
-						self.rect.bottom = sprite.rect.top
+						self.hitbox.bottom = sprite.hitbox.top
 					if self.direction.y < 0:
-						self.rect.top = sprite.rect.bottom
+						self.hitbox.top = sprite.hitbox.bottom
 		
 	def get_status(self):
 		if self.direction.y < 0:
@@ -101,6 +103,7 @@ class Player(pygame.sprite.Sprite):
 			self.frame_index = 0
 
 		self.image = animation[int(self.frame_index)]
+
 
 	def update(self):
 		self.input()
