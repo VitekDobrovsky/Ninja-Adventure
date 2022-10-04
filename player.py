@@ -1,6 +1,7 @@
 import pygame
 from settings import *
 from support import import_folder
+from support import draw_rect
 
 
 class Player(pygame.sprite.Sprite):
@@ -10,6 +11,7 @@ class Player(pygame.sprite.Sprite):
 		self.image = pygame.image.load('graphics/player/down/down_0.png')
 		self.rect = self.image.get_rect(topleft=pos)
 		self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET['player'])
+		self.screen = pygame.display.get_surface()
 
 		# move
 		self.direction = pygame.math.Vector2()
@@ -23,6 +25,9 @@ class Player(pygame.sprite.Sprite):
 		self.pl_assets()
 		self.frame_index = 0
 		self.frame_speed = 0.15
+
+		# bars
+		self.health = player_stats['health']
 
 	def input(self):
 		keys = pygame.key.get_pressed()
@@ -42,16 +47,21 @@ class Player(pygame.sprite.Sprite):
 			self.direction.x = 0
 
 	def move(self):
+		# normalize direction
 		if self.direction.magnitude() != 0:
 			self.direction.normalize()
 
+		# apply move
 		self.hitbox.x += self.direction.x * self.speed
 		self.colision('horizontal')
 		self.hitbox.y += self.direction.y * self.speed
 		self.colision('vertical')
+
+		# matching hitbox
 		self.rect.center = self.hitbox.center
 
 	def colision(self, direction):
+		# check horiziontal collision
 		if direction == 'horizontal':
 			for sprite in self.obstacle_sprites:
 				if sprite.hitbox.colliderect(self.hitbox):
@@ -59,6 +69,7 @@ class Player(pygame.sprite.Sprite):
 						self.hitbox.right = sprite.hitbox.left
 					if self.direction.x < 0:
 						self.hitbox.left = sprite.hitbox.right
+		# check vertical collision
 		elif direction == 'vertical':
 			for sprite in self.obstacle_sprites:
 				if sprite.hitbox.colliderect(self.hitbox):
@@ -68,6 +79,7 @@ class Player(pygame.sprite.Sprite):
 						self.hitbox.top = sprite.hitbox.bottom
 		
 	def get_status(self):
+		# getting y status
 		if self.direction.y < 0:
 			self.status = 'up'
 		elif self.direction.y > 0:
@@ -76,6 +88,7 @@ class Player(pygame.sprite.Sprite):
 			if len(self.status) < 6:
 				if self.direction.x == 0:
 					self.status += '_idle'
+		# getting x status
 		if self.direction.x > 0:
 			self.status = 'right'
 		elif self.direction.x < 0:
@@ -87,6 +100,7 @@ class Player(pygame.sprite.Sprite):
 
 	def pl_assets(self):
 		character_path = 'graphics/player'
+		# store paths
 		self.animations = {'up': [],'down': [],'left': [],'right': [],
 			'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
 			'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]} 
@@ -104,9 +118,18 @@ class Player(pygame.sprite.Sprite):
 
 		self.image = animation[int(self.frame_index)]
 
+	def health_bar(self):
+		# draw health bar
+		draw_rect(self.screen,10 - 2,10 - 2, 204, BAR_HEIGHT + 4, (69,69,69))
+		draw_rect(self.screen,10,10, self.health, BAR_HEIGHT, (255,0,0))
+		
+		# draw energy bar
+		draw_rect(self.screen,10 - 2,30 - 2, 204, BAR_HEIGHT + 4, (69,69,69))
+		draw_rect(self.screen,10,30, self.health, BAR_HEIGHT, (0,0,225))
 
 	def update(self):
 		self.input()
 		self.move()
 		self.get_status()
 		self.animate()
+		self.health_bar()

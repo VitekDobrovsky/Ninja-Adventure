@@ -1,13 +1,21 @@
 import pyautogui
 
+
 width, height= pyautogui.size()
 WIDTH    = width * 0.7
 HEIGHT   = height * 0.7
+
 FPS      = 60
 TILESIZE = 64
 
+
+BAR_HEIGHT = 13
+FRAME_BAR_HEIGHT = 20
+
+
 player_stats = {
-	'speed': 5
+	'speed': 5,
+	'health': 200
 }
 
 HITBOX_OFFSET = {

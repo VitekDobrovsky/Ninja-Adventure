@@ -10,3 +10,7 @@ def  import_folder(path):
 			image_surface = pygame.image.load(full_path).convert_alpha()
 			img_list.append(image_surface)
 	return img_list
+
+def draw_rect(screen,x,y,width,height,color):
+	rect = pygame.Rect(x,y,width,height)
+	pygame.draw.rect(screen, color, rect)

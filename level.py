@@ -32,6 +32,7 @@ class Level:
 class Camera(pygame.sprite.Group):
 	def __init__(self):
 		super().__init__()
+		# getting display surface
 		self.screen = pygame.display.get_surface()
 
 		# offset
@@ -40,9 +41,11 @@ class Camera(pygame.sprite.Group):
 		self.half_h = self.screen.get_size()[1] // 2
 
 	def custom_draw(self, player):
+		# apply offset
 		self.offset.x = player.rect.centerx - self.half_w
 		self.offset.y = player.rect.centery - self.half_h
 
+		# drawing sprites
 		for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
 			pos_offset = sprite.rect.topleft - self.offset
 			self.screen.blit(sprite.image, pos_offset)
