@@ -15,7 +15,8 @@ FRAME_BAR_HEIGHT = 20
 
 player_stats = {
 	'speed': 5,
-	'health': 200
+	'health': 150,
+	'energy': 50
 }
 
 HITBOX_OFFSET = {
