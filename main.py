@@ -23,7 +23,7 @@ class Game:
 					break
 			
 			# updating
-			self.screen.fill('black')
+			self.screen.fill('#71DDEE')
 			self.level.run()
 			pygame.display.update()
 			self.clock.tick(FPS)
