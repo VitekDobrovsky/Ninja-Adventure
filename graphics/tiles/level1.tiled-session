@@ -13,7 +13,7 @@
             "scale": 0.125,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 1556,
+                "x": 1560,
                 "y": 2068
             }
         },
@@ -52,7 +52,7 @@
         }
     },
     "last.exportedFilePath": "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level_1/CSV_files",
-    "last.imagePath": "/home/vitekdobrovsky/Projects/d-game/graphics/tiles",
+    "last.imagePath": "/home/vitekdobrovsky/Projects/d-game/graphics/tiles/logs",
     "map.height": 42,
     "map.lastUsedExportFilter": "CSV files (*.csv)",
     "map.lastUsedFormat": "tmx",
