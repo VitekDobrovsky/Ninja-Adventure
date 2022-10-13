@@ -10,7 +10,11 @@ class Tile(pygame.sprite.Sprite):
 		path = 'graphics/test/rock.png'
 		self.image = pygame.image.load(path).convert_alpha()
 		if type == 'grass':
-			self.image = choice(import_folder('graphics/tiles/grass'))
+			self.image = choice(import_folder('graphics/tiles/grass')).convert_alpha()
+		elif type == 'tree':
+			self.image = choice(import_folder('graphics/tiles/trees')).convert_alpha()
+		elif type == 'stubbe':
+			self.image = choice(import_folder('graphics/tiles/logs')).convert_alpha()
 			
 		self.rect = self.image.get_rect(topleft=pos)
-		self.hitbox = self.rect.inflate(-30, HITBOX_OFFSET[type])
+		self.hitbox = self.rect.inflate(HITBOX_OFFSET_X[type], HITBOX_OFFSET_Y[type])

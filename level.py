@@ -15,12 +15,11 @@ class Level:
 		# create map
 		self.layouts = {
 			'entities': import_csv_layout('graphics/levels/level_1/CSV_files/1_entities.csv'),
-			'boundaries': import_csv_layout('graphics/levels/level_1/CSV_files/1_boundaries.csv'),
-			'grass': import_csv_layout('graphics/levels/level_1/CSV_files/1_grass.csv')
+			'border': import_csv_layout('graphics/levels/level_1/CSV_files/1_border.csv'),
+			'grass': import_csv_layout('graphics/levels/level_1/CSV_files/1_grass.csv'),
+			'trees': import_csv_layout('graphics/levels/level_1/CSV_files/1_tree.csv')
 			}
 		self.create_map()
-
-
 
 	def create_map(self):
 		for style,layout in self.layouts.items():
@@ -30,18 +29,18 @@ class Level:
 						x = col_index * TILESIZE
 						y = row_index * TILESIZE
 
-						if style == 'boundaries':
+						if style == 'border':
 							Tile((x,y), [self.obstacle_sprites], 'border')
 						elif style == 'entities':
 							self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites)
 						elif style == 'grass':
 							Tile((x,y), [self.visible_sprites], 'grass')
+						elif style == 'trees':
+							if col == '0' or col == '1':
+								Tile((x,y), [self.visible_sprites, self.obstacle_sprites], 'stubbe')
+							else:
+								Tile((x,y), [self.visible_sprites, self.obstacle_sprites], 'tree')
 
-
-
-
-
-					
 
 	def run(self):
 		self.visible_sprites.custom_draw(self.player)
@@ -60,7 +59,7 @@ class Camera(pygame.sprite.Group):
 		self.half_h = self.screen.get_size()[1] // 2
 
 		# map
-		self.map = pygame.image.load('graphics/levels/level_1/level_1.png')
+		self.map = pygame.image.load('graphics/levels/level_1/level_1.png').convert_alpha()
 		self.map_rect = self.map.get_rect(topleft=(0,0))
 
 	def custom_draw(self, player):

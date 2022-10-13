@@ -3,12 +3,20 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Tiled Project/level_1.tmx",
+    "activeFile": "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level_1/Tiled Project/level_1.tmx",
     "expandedProjectPaths": [
         "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level_1/Tiled Project/level_1.tmx": {
+            "scale": 0.125,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 3272,
+                "y": 1468
+            }
+        },
         "Tiled Project/level_1.tmx": {
             "scale": 0.5,
             "selectedLayer": 0,
@@ -17,6 +25,16 @@
                 "y": 1813
             }
         },
+        "TilesetHouse.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "bridge.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 0.015625,
+            "scaleInEditor": 1
+        },
         "details.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
@@ -24,7 +42,7 @@
         },
         "floor.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 0.5,
+            "scaleInDock": 1,
             "scaleInEditor": 0.33
         },
         "tree, grass.tsx": {
@@ -33,8 +51,8 @@
             "scaleInEditor": 1
         }
     },
-    "last.exportedFilePath": "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level 1/CSV files",
-    "last.imagePath": "/home/vitekdobrovsky/Projects/d-game/graphics/tiles/grass",
+    "last.exportedFilePath": "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level_1/CSV_files",
+    "last.imagePath": "/home/vitekdobrovsky/Projects/d-game/graphics/tiles",
     "map.height": 42,
     "map.lastUsedExportFilter": "CSV files (*.csv)",
     "map.lastUsedFormat": "tmx",
@@ -42,14 +60,17 @@
     "map.tileWidth": 64,
     "map.width": 62,
     "openFiles": [
-        "Tiled Project/level_1.tmx",
-        "floor.tsx",
-        "details.tsx",
-        "tree, grass.tsx"
+        "tree, grass.tsx",
+        "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level_1/Tiled Project/level_1.tmx",
+        "TilesetHouse.tsx",
+        "bridge.tsx"
     ],
     "project": "level1.tiled-project",
     "recentFiles": [
         "tree, grass.tsx",
+        "bridge.tsx",
+        "TilesetHouse.tsx",
+        "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level_1/Tiled Project/level_1.tmx",
         "details.tsx",
         "floor.tsx",
         "Tiled Project/level_1.tmx"
@@ -59,5 +80,5 @@
         "height": 64,
         "width": 64
     },
-    "tileset.type": 1
+    "tileset.type": 0
 }
