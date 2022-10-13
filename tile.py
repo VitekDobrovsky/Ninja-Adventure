@@ -21,3 +21,6 @@ class Tile(pygame.sprite.Sprite):
 			self.rect = self.image.get_rect(midleft=pos)
 
 		self.hitbox = self.rect.inflate(HITBOX_OFFSET_X[type], HITBOX_OFFSET_Y[type])
+
+
+

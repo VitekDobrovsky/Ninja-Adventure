@@ -27,7 +27,8 @@ HITBOX_OFFSET_Y = {
 	'stubbe': -60,
 	'border_bridge': 0,
 	'border_corner': 20,
-	'border_horizontal': 90
+	'border_horizontal': 90,
+	'border_banister': -63
 }
 
 HITBOX_OFFSET_X = {
@@ -38,7 +39,8 @@ HITBOX_OFFSET_X = {
 	'stubbe': -30,
 	'border_bridge': 0,
 	'border_corner': 20,
-	'border_horizontal': 20
+	'border_horizontal': 20,
+	'border_banister': 0
 
 }
 

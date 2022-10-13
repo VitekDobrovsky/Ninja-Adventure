@@ -19,6 +19,7 @@ class Level:
 			'border_bridge': import_csv_layout('graphics/levels/level_1/CSV_files/1_border_bridge.csv'),			
 			'border_corner': import_csv_layout('graphics/levels/level_1/CSV_files/1_border_corner.csv'),			
 			'border_horizontal': import_csv_layout('graphics/levels/level_1/CSV_files/1_border_horizontal.csv'),			
+			'border_banister': import_csv_layout('graphics/levels/level_1/CSV_files/1_border_banister.csv'),			
 			'grass': import_csv_layout('graphics/levels/level_1/CSV_files/1_grass.csv'),
 			'trees': import_csv_layout('graphics/levels/level_1/CSV_files/1_tree.csv')
 			}
@@ -40,6 +41,8 @@ class Level:
 							Tile((x,y), [self.obstacle_sprites], 'border_corner')
 						elif style == 'border_horizontal':
 							Tile((x,y), [ self.obstacle_sprites], 'border_horizontal')
+						elif style == 'border_banister':
+							Tile((x,y), [ self.obstacle_sprites], 'border_banister')
 						elif style == 'entities':
 							self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites)
 						elif style == 'grass':
