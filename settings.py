@@ -24,7 +24,8 @@ HITBOX_OFFSET_Y = {
 	'grass': -20,
 	'border': -30,
 	'tree': -100,
-	'stubbe': -60
+	'stubbe': -60,
+	'bridge_border': 0
 }
 
 HITBOX_OFFSET_X = {
@@ -32,6 +33,7 @@ HITBOX_OFFSET_X = {
 	'grass': -30,
 	'border': -50,
 	'tree': -50,
-	'stubbe': -30
+	'stubbe': -30,
+	'bridge_border': 0
 }
 

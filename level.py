@@ -16,6 +16,7 @@ class Level:
 		self.layouts = {
 			'entities': import_csv_layout('graphics/levels/level_1/CSV_files/1_entities.csv'),
 			'border': import_csv_layout('graphics/levels/level_1/CSV_files/1_border.csv'),
+			'border_bridge': import_csv_layout('graphics/levels/level_1/CSV_files/1_border_bridge.csv'),			
 			'grass': import_csv_layout('graphics/levels/level_1/CSV_files/1_grass.csv'),
 			'trees': import_csv_layout('graphics/levels/level_1/CSV_files/1_tree.csv')
 			}
@@ -31,6 +32,8 @@ class Level:
 
 						if style == 'border':
 							Tile((x,y), [self.obstacle_sprites], 'border')
+						elif style == 'border_bridge':
+							Tile((x,y), [self.obstacle_sprites], 'bridge_border')
 						elif style == 'entities':
 							self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites)
 						elif style == 'grass':
