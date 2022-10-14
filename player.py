@@ -2,13 +2,35 @@ import pygame
 from settings import *
 from support import import_folder
 from support import draw_rect
+from support import Sprite_sheet
 
 
 class Player(pygame.sprite.Sprite):
 	def __init__(self, pos, groups, obstacle_sprites):
 		super().__init__(groups)
+		# sprite sheets set up
+		self.idle_sheet = Sprite_sheet('graphics/player/Idle.png')
+		self.walk_sheet = Sprite_sheet('graphics/player/Walk.png')
+
+		# frames
+		self.frames = {
+			'down_idle': [self.idle_sheet.get_image(0,0)],
+			'up_idle': [self.idle_sheet.get_image(0,1)],
+			'left_idle': [self.idle_sheet.get_image(0,2)],
+			'right_idle': [self.idle_sheet.get_image(0,3)],
+			'down': [self.walk_sheet.get_image(0,0), self.walk_sheet.get_image(1,0),
+					self.walk_sheet.get_image(2,0), self.walk_sheet.get_image(3,0)],
+			'up': [self.walk_sheet.get_image(0,1), self.walk_sheet.get_image(1,1),
+					self.walk_sheet.get_image(2,1), self.walk_sheet.get_image(3,1)],
+			'left': [self.walk_sheet.get_image(0,2), self.walk_sheet.get_image(1,2),
+					self.walk_sheet.get_image(2,2), self.walk_sheet.get_image(3,2)],
+			'right': [self.walk_sheet.get_image(0,3), self.walk_sheet.get_image(1,3),
+					self.walk_sheet.get_image(2,3), self.walk_sheet.get_image(3,3)],
+
+		}
+
 		# set up
-		self.image = pygame.image.load('graphics/player/down/down_0.png').convert_alpha()
+		self.image = self.frames['down_idle'][0]
 		self.rect = self.image.get_rect(topleft=pos)
 		self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET_Y['player'])
 		self.screen = pygame.display.get_surface()
@@ -22,7 +44,6 @@ class Player(pygame.sprite.Sprite):
 
 		# animation
 		self.status = 'down_idle'
-		self.pl_assets()
 		self.frame_index = 0
 		self.frame_speed = 0.15
 
@@ -98,20 +119,9 @@ class Player(pygame.sprite.Sprite):
 			if len(self.status) < 6:
 				if self.direction.y == 0:
 					self.status += '_idle'
-
-	def pl_assets(self):
-		character_path = 'graphics/player'
-		# store paths
-		self.animations = {'up': [],'down': [],'left': [],'right': [],
-			'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
-			'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]} 
-
-		for animation in self.animations.keys():
-			full_path = character_path + '/' + animation
-			self.animations[animation] = import_folder(full_path)
-			
+	
 	def animate(self):
-		animation = self.animations[self.status]
+		animation = self.frames[self.status]
 
 		self.frame_index += self.frame_speed
 		if self.frame_index >= len(animation):
@@ -139,4 +149,5 @@ class Player(pygame.sprite.Sprite):
 		self.move()
 		self.get_status()
 		self.animate()
+		print(self.status)
 		self.health_bar()

@@ -24,3 +24,16 @@ def import_csv_layout(path):
 def draw_rect(screen,x,y,width,height,color):
 	rect = pygame.Rect(x,y,width,height)
 	pygame.draw.rect(screen, color, rect)
+
+
+class Sprite_sheet:
+	def __init__(self, path):
+		self.sheet = pygame.image.load(path).convert_alpha()
+
+	def get_image(self, col, row):
+		image = pygame.Surface((16, 16)).convert_alpha()
+		image.blit(self.sheet, (0, 0), ((row * 16), (col * 16), 16, 16))
+		image = pygame.transform.scale(image, (64, 64))
+		image.set_colorkey((0, 0, 0))
+		return image
+
