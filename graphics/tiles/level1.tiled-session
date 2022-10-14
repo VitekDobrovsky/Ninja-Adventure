@@ -10,11 +10,11 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level_1/Tiled Project/level_1.tmx": {
-            "scale": 0.125,
-            "selectedLayer": 8,
+            "scale": 0.25,
+            "selectedLayer": 9,
             "viewCenter": {
-                "x": 1560,
-                "y": 2068
+                "x": 1654,
+                "y": 1530
             }
         },
         "Tiled Project/level_1.tmx": {
@@ -47,7 +47,7 @@
         },
         "tree, grass.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 0.25,
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         }
     },
@@ -67,10 +67,10 @@
     ],
     "project": "level1.tiled-project",
     "recentFiles": [
+        "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level_1/Tiled Project/level_1.tmx",
         "tree, grass.tsx",
         "TilesetHouse.tsx",
         "bridge.tsx",
-        "/home/vitekdobrovsky/Projects/d-game/graphics/levels/level_1/Tiled Project/level_1.tmx",
         "details.tsx",
         "floor.tsx",
         "Tiled Project/level_1.tmx"

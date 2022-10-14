@@ -2,10 +2,10 @@
 <tileset version="1.9" tiledversion="1.9.2" name="tree, grass" tilewidth="128" tileheight="128" tilecount="8" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
-  <image width="128" height="128" source="trees/0.png"/>
+  <image width="128" height="128" source="logs/0.png"/>
  </tile>
  <tile id="1">
-  <image width="128" height="128" source="trees/01.png"/>
+  <image width="128" height="128" source="logs/01.png"/>
  </tile>
  <tile id="2">
   <image width="128" height="128" source="trees/02.png"/>
