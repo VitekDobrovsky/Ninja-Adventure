@@ -1,8 +1,6 @@
 import pygame
 from settings import *
-from support import import_folder
-from support import draw_rect
-from support import Sprite_sheet
+from support import *
 
 
 class Player(pygame.sprite.Sprite):
@@ -11,6 +9,7 @@ class Player(pygame.sprite.Sprite):
 		# sprite sheets set up
 		self.idle_sheet = Sprite_sheet('graphics/player/Idle.png')
 		self.walk_sheet = Sprite_sheet('graphics/player/Walk.png')
+		self.attack_sheet = Sprite_sheet('graphics/player/Attack.png')
 
 		# frames
 		self.frames = {
@@ -26,8 +25,11 @@ class Player(pygame.sprite.Sprite):
 					self.walk_sheet.get_image(2,2), self.walk_sheet.get_image(3,2)],
 			'right': [self.walk_sheet.get_image(0,3), self.walk_sheet.get_image(1,3),
 					self.walk_sheet.get_image(2,3), self.walk_sheet.get_image(3,3)],
-
-		}
+			'down_attack': [self.attack_sheet.get_image(0,0)],
+			'up_attack': [self.attack_sheet.get_image(0,1)],
+			'left_attack': [self.attack_sheet.get_image(0,2)],
+			'right_attack': [self.attack_sheet.get_image(0,3)]
+			}
 
 		# set up
 		self.image = self.frames['down_idle'][0]
@@ -51,9 +53,21 @@ class Player(pygame.sprite.Sprite):
 		self.health = player_stats['health']
 		self.energy = player_stats['energy']
 
+		# attack
+		self.can_attack = True
+		self.attack_cooldown = 800
+		self.attack_time = None
+		self.attack = False
+
+		# charge
+		self.charge = False
+		self.charge_cooldown = 150
+		self.charge_time = None
+
 	def input(self):
 		keys = pygame.key.get_pressed()
 
+		# evet handler
 		if keys[pygame.K_w]:
 			self.direction.y = -1
 		elif keys[pygame.K_s]:
@@ -68,10 +82,32 @@ class Player(pygame.sprite.Sprite):
 		else:
 			self.direction.x = 0
 
+		if keys[pygame.K_SPACE] and self.can_attack:
+			# time
+			self.attack = True
+			self.attack_time = pygame.time.get_ticks()
+			self.can_attack = False
+
+			# charge
+			self.charge = True
+			self.charge_time = pygame.time.get_ticks()
+
 	def move(self):
 		# normalize direction
 		if self.direction.magnitude() != 0:
 			self.direction.normalize()
+
+		# stop at attack
+		distance = 3
+		if self.charge:
+			if self.status == 'down_attack':
+				self.direction.y = distance
+			elif self.status == 'up_attack':
+				self.direction.y = -distance
+			elif self.status == 'right_attack':
+				self.direction.x = distance
+			elif self.status == 'left_attack':
+				self.direction.x = -distance
 
 		# apply move
 		self.hitbox.x += self.direction.x * self.speed
@@ -119,7 +155,15 @@ class Player(pygame.sprite.Sprite):
 			if len(self.status) < 6:
 				if self.direction.y == 0:
 					self.status += '_idle'
-	
+				
+		if self.charge:
+			self.status = self.status.replace('_idle', '')
+			if len(self.status) < 6:
+				self.status += '_attack'
+		else:
+			self.status = self.status.replace('_attack', '')
+
+
 	def animate(self):
 		animation = self.frames[self.status]
 
@@ -144,10 +188,23 @@ class Player(pygame.sprite.Sprite):
 		overlay_e_rect = overlay_e.get_rect(topleft= (5,31))
 		self.screen.blit(overlay_e, overlay_e_rect)
 
+	def cooldown(self):
+		current_time = pygame.time.get_ticks()
+
+		if not self.can_attack:
+			if current_time - self.attack_time >= self.attack_cooldown:
+				self.can_attack = True
+				self.attack = False
+
+		if self.charge:
+			if current_time - self.charge_time >= self.charge_cooldown:
+				self.charge = False
+
 	def update(self):
+		self.cooldown()
+		debug(str(self.charge), self.screen)
 		self.input()
 		self.move()
 		self.get_status()
 		self.animate()
-		print(self.status)
 		self.health_bar()

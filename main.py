@@ -8,9 +8,10 @@ class Game:
 	def __init__(self):
 		# set up
 		pygame.init()
+		pygame.font.init()
 		pygame.display.set_caption('Game')
 		self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-		self.clock = pygame.time.Clock()
+		self.clock = pygame.time.Clock()  
 		self.level = Level()
 
 	def run(self):

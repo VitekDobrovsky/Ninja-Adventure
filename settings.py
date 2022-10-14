@@ -2,8 +2,8 @@ import pyautogui
 
 
 width, height= pyautogui.size()
-WIDTH    = width #* 0.7
-HEIGHT   = height #* 0.7
+WIDTH    = width * 0.9
+HEIGHT   = height * 0.9
 
 FPS      = 60
 TILESIZE = 64

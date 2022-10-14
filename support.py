@@ -25,6 +25,13 @@ def draw_rect(screen,x,y,width,height,color):
 	rect = pygame.Rect(x,y,width,height)
 	pygame.draw.rect(screen, color, rect)
 
+def debug(value, screen):
+	font = pygame.font.Font('graphics/fonts/font.ttf' ,50)
+	text = font.render(value,True, (225,225,225))
+	rect = text.get_rect(topleft=(0,500))
+	pygame.draw.rect(screen, (0,0,0), rect)
+	screen.blit(text, rect)
+
 
 class Sprite_sheet:
 	def __init__(self, path):
