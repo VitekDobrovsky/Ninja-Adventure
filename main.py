@@ -9,7 +9,7 @@ class Game:
 		# set up
 		pygame.init()
 		pygame.font.init()
-		pygame.display.set_caption('Game')
+		pygame.display.set_caption('Ninja Adventure')
 		self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 		self.clock = pygame.time.Clock()  
 		self.level = Level()

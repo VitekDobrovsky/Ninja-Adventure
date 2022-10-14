@@ -64,6 +64,11 @@ class Player(pygame.sprite.Sprite):
 		self.charge_cooldown = 150
 		self.charge_time = None
 
+		# stop after attacl
+		self.stop = False 
+		self.stop_cooldown = 250
+		self.stop_time = None 
+
 	def input(self):
 		keys = pygame.key.get_pressed()
 
@@ -92,12 +97,16 @@ class Player(pygame.sprite.Sprite):
 			self.charge = True
 			self.charge_time = pygame.time.get_ticks()
 
+			# stop after charge
+			self.stop = True 
+			self.stop_time = pygame.time.get_ticks()
+
 	def move(self):
 		# normalize direction
 		if self.direction.magnitude() != 0:
 			self.direction.normalize()
 
-		# stop at attack
+		# push forward while attack
 		distance = 3
 		if self.charge:
 			if self.status == 'down_attack':
@@ -108,6 +117,11 @@ class Player(pygame.sprite.Sprite):
 				self.direction.x = distance
 			elif self.status == 'left_attack':
 				self.direction.x = -distance
+
+		# stop after charge
+		if self.stop and not self.charge:
+			self.direction.y = 0
+			self.direction.x = 0
 
 		# apply move
 		self.hitbox.x += self.direction.x * self.speed
@@ -200,9 +214,12 @@ class Player(pygame.sprite.Sprite):
 			if current_time - self.charge_time >= self.charge_cooldown:
 				self.charge = False
 
+		if self.stop:
+			if current_time - self.stop_time >= self.stop_cooldown:
+				self.stop = False
+
 	def update(self):
 		self.cooldown()
-		debug(str(self.charge), self.screen)
 		self.input()
 		self.move()
 		self.get_status()
