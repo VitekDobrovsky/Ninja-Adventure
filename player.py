@@ -1,10 +1,11 @@
 import pygame
 from settings import *
 from support import *
+from weapon import Weapon
 
 
 class Player(pygame.sprite.Sprite):
-	def __init__(self, pos, groups, obstacle_sprites):
+	def __init__(self, pos, groups, obstacle_sprites, visible_sprites):
 		super().__init__(groups)
 		# sprite sheets set up
 		self.idle_sheet = Sprite_sheet('graphics/player/Idle.png')
@@ -41,8 +42,9 @@ class Player(pygame.sprite.Sprite):
 		self.direction = pygame.math.Vector2()
 		self.speed = player_stats['speed']
 
-		# colision
+		# groups
 		self.obstacle_sprites = obstacle_sprites
+		self.visible_sprites = visible_sprites
 
 		# animation
 		self.status = 'down_idle'
@@ -55,9 +57,12 @@ class Player(pygame.sprite.Sprite):
 
 		# attack
 		self.can_attack = True
-		self.attack_cooldown = 800
+		self.attack_cooldown = 600
 		self.attack_time = None
 		self.attack = False
+
+		# weapon
+		self.weapon = Weapon(self.rect, self.status, self.visible_sprites)
 
 		# charge
 		self.charge = False
@@ -66,7 +71,7 @@ class Player(pygame.sprite.Sprite):
 
 		# stop after attacl
 		self.stop = False 
-		self.stop_cooldown = 250
+		self.stop_cooldown = 200
 		self.stop_time = None 
 
 	def input(self):
@@ -177,7 +182,6 @@ class Player(pygame.sprite.Sprite):
 		else:
 			self.status = self.status.replace('_attack', '')
 
-
 	def animate(self):
 		animation = self.frames[self.status]
 
@@ -202,6 +206,15 @@ class Player(pygame.sprite.Sprite):
 		overlay_e_rect = overlay_e.get_rect(topleft= (5,31))
 		self.screen.blit(overlay_e, overlay_e_rect)
 
+	def show_weapon(self):
+		if self.charge:
+			#self.weapon = Weapon(self.rect, self.status, self.visible_sprites)
+			self.weapon.status = self.status
+			self.weapon.player_rect = self.rect
+			self.weapon.show()
+		else:
+			self.weapon.remove()
+
 	def cooldown(self):
 		current_time = pygame.time.get_ticks()
 
@@ -223,5 +236,6 @@ class Player(pygame.sprite.Sprite):
 		self.input()
 		self.move()
 		self.get_status()
+		self.show_weapon()
 		self.animate()
 		self.health_bar()

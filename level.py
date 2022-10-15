@@ -9,8 +9,11 @@ class Level:
 	def __init__(self):
 		# set up
 		self.screen = pygame.display.get_surface()
+
+		# groups
 		self.visible_sprites = Camera()
 		self.obstacle_sprites = pygame.sprite.Group()
+		self.attackable_sprites = pygame.sprite.Group()
 
 		# create map
 		self.layouts = {
@@ -44,7 +47,7 @@ class Level:
 						elif style == 'border_banister':
 							Tile((x,y), [ self.obstacle_sprites], 'border_banister')
 						elif style == 'entities':
-							self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites)
+							self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites, self.visible_sprites)
 						elif style == 'grass':
 							Tile((x,y), [self.visible_sprites], 'grass')
 						elif style == 'trees':
