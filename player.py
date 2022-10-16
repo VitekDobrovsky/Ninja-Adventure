@@ -7,17 +7,18 @@ from weapon import Weapon
 class Player(pygame.sprite.Sprite):
 	def __init__(self, pos, groups, obstacle_sprites, visible_sprites):
 		super().__init__(groups)
-		# sprite sheets set up
+		
+		# sprite sheets
 		self.idle_sheet = Sprite_sheet('graphics/player/Idle.png')
 		self.walk_sheet = Sprite_sheet('graphics/player/Walk.png')
 		self.attack_sheet = Sprite_sheet('graphics/player/Attack.png')
 
-		# frames
+		# animation frames
 		self.frames = {
-			'down_idle': [self.idle_sheet.get_image(0,0)],
-			'up_idle': [self.idle_sheet.get_image(0,1)],
-			'left_idle': [self.idle_sheet.get_image(0,2)],
-			'right_idle': [self.idle_sheet.get_image(0,3)],
+			'down_idle': [self.idle_sheet.get_image(0,0), self.idle_sheet.get_image(0,0), self.idle_sheet.get_image(0,0), self.idle_sheet.get_image(1,0), self.idle_sheet.get_image(1,0), self.idle_sheet.get_image(1,0), self.idle_sheet.get_image(1,0)],
+			'up_idle': [self.idle_sheet.get_image(0,1), self.idle_sheet.get_image(0,1), self.idle_sheet.get_image(0,1), self.idle_sheet.get_image(1,1), self.idle_sheet.get_image(1,1), self.idle_sheet.get_image(1,1), self.idle_sheet.get_image(1,1)],
+			'left_idle': [self.idle_sheet.get_image(0,2), self.idle_sheet.get_image(0,2), self.idle_sheet.get_image(0,2), self.idle_sheet.get_image(1,2), self.idle_sheet.get_image(1,2), self.idle_sheet.get_image(1,2), self.idle_sheet.get_image(1,2)],
+			'right_idle': [self.idle_sheet.get_image(0,3), self.idle_sheet.get_image(0,3), self.idle_sheet.get_image(0,3), self.idle_sheet.get_image(1,3), self.idle_sheet.get_image(1,3), self.idle_sheet.get_image(1,3), self.idle_sheet.get_image(1,3)],
 			'down': [self.walk_sheet.get_image(0,0), self.walk_sheet.get_image(1,0),
 					self.walk_sheet.get_image(2,0), self.walk_sheet.get_image(3,0)],
 			'up': [self.walk_sheet.get_image(0,1), self.walk_sheet.get_image(1,1),
@@ -32,7 +33,7 @@ class Player(pygame.sprite.Sprite):
 			'right_attack': [self.attack_sheet.get_image(0,3)]
 			}
 
-		# set up
+		# player set up
 		self.image = self.frames['down_idle'][0]
 		self.rect = self.image.get_rect(topleft=pos)
 		self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET_Y['player'])
@@ -51,7 +52,7 @@ class Player(pygame.sprite.Sprite):
 		self.frame_index = 0
 		self.frame_speed = 0.15
 
-		# bars
+		# stats
 		self.health = player_stats['health']
 		self.energy = player_stats['energy']
 
@@ -66,10 +67,10 @@ class Player(pygame.sprite.Sprite):
 
 		# charge
 		self.charge = False
-		self.charge_cooldown = 150
+		self.charge_cooldown = 100
 		self.charge_time = None
 
-		# stop after attacl
+		# stop after attack
 		self.stop = False 
 		self.stop_cooldown = 200
 		self.stop_time = None 
@@ -93,12 +94,12 @@ class Player(pygame.sprite.Sprite):
 			self.direction.x = 0
 
 		if keys[pygame.K_SPACE] and self.can_attack:
-			# time
+			# attack cooldown
 			self.attack = True
 			self.attack_time = pygame.time.get_ticks()
 			self.can_attack = False
 
-			# charge
+			# charge cooldown
 			self.charge = True
 			self.charge_time = pygame.time.get_ticks()
 
@@ -111,8 +112,8 @@ class Player(pygame.sprite.Sprite):
 		if self.direction.magnitude() != 0:
 			self.direction.normalize()
 
-		# push forward while attack
-		distance = 3
+		# charge
+		distance = 2.5
 		if self.charge:
 			if self.status == 'down_attack':
 				self.direction.y = distance
@@ -146,6 +147,7 @@ class Player(pygame.sprite.Sprite):
 						self.hitbox.right = sprite.hitbox.left
 					if self.direction.x < 0:
 						self.hitbox.left = sprite.hitbox.right
+
 		# check vertical collision
 		elif direction == 'vertical':
 			for sprite in self.obstacle_sprites:
@@ -165,6 +167,7 @@ class Player(pygame.sprite.Sprite):
 			if len(self.status) < 6:
 				if self.direction.x == 0:
 					self.status += '_idle'
+		
 		# getting x status
 		if self.direction.x > 0:
 			self.status = 'right'
@@ -174,8 +177,9 @@ class Player(pygame.sprite.Sprite):
 			if len(self.status) < 6:
 				if self.direction.y == 0:
 					self.status += '_idle'
-				
-		if self.charge:
+		
+		# adding attack to status
+		if self.charge or self.stop:
 			self.status = self.status.replace('_idle', '')
 			if len(self.status) < 6:
 				self.status += '_attack'
@@ -183,15 +187,18 @@ class Player(pygame.sprite.Sprite):
 			self.status = self.status.replace('_attack', '')
 
 	def animate(self):
+		# animation
 		animation = self.frames[self.status]
-
 		self.frame_index += self.frame_speed
+
 		if self.frame_index >= len(animation):
 			self.frame_index = 0
 
 		self.image = animation[int(self.frame_index)]
 
 	def health_bar(self):
+		#NOTE: have to make completely new graphics
+
 		# draw health bar
 		draw_rect(self.screen,10,10, 200, BAR_HEIGHT, (134,122,4))
 		draw_rect(self.screen,10,10, self.health, BAR_HEIGHT, (255,0,0))
@@ -206,9 +213,9 @@ class Player(pygame.sprite.Sprite):
 		overlay_e_rect = overlay_e.get_rect(topleft= (5,31))
 		self.screen.blit(overlay_e, overlay_e_rect)
 
-	def show_weapon(self):
-		if self.charge:
-			#self.weapon = Weapon(self.rect, self.status, self.visible_sprites)
+	def draw_weapon(self):
+		# draw weapon
+		if self.charge or self.stop:
 			self.weapon.status = self.status
 			self.weapon.player_rect = self.rect
 			self.weapon.show()
@@ -218,15 +225,18 @@ class Player(pygame.sprite.Sprite):
 	def cooldown(self):
 		current_time = pygame.time.get_ticks()
 
+		# attack cooldown
 		if not self.can_attack:
 			if current_time - self.attack_time >= self.attack_cooldown:
 				self.can_attack = True
 				self.attack = False
 
+		# charge cooldown
 		if self.charge:
 			if current_time - self.charge_time >= self.charge_cooldown:
 				self.charge = False
 
+		# timing stop
 		if self.stop:
 			if current_time - self.stop_time >= self.stop_cooldown:
 				self.stop = False
@@ -236,6 +246,6 @@ class Player(pygame.sprite.Sprite):
 		self.input()
 		self.move()
 		self.get_status()
-		self.show_weapon()
+		self.draw_weapon()
 		self.animate()
 		self.health_bar()

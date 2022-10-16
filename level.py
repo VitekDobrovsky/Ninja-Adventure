@@ -7,13 +7,12 @@ from support import import_csv_layout
 
 class Level:
 	def __init__(self):
-		# set up
+		# define screen
 		self.screen = pygame.display.get_surface()
 
 		# groups
 		self.visible_sprites = Camera()
 		self.obstacle_sprites = pygame.sprite.Group()
-		self.attackable_sprites = pygame.sprite.Group()
 
 		# create map
 		self.layouts = {
@@ -29,6 +28,7 @@ class Level:
 		self.create_map()
 
 	def create_map(self):
+		# drawing map
 		for style,layout in self.layouts.items():
 			for row_index,row in enumerate(layout):
 				for col_index,col in enumerate(row):
@@ -56,16 +56,14 @@ class Level:
 							else:
 								Tile((x,y), [self.visible_sprites, self.obstacle_sprites], 'tree')
 
-
 	def run(self):
 		self.visible_sprites.custom_draw(self.player)
 		self.visible_sprites.update()
 
-
 class Camera(pygame.sprite.Group):
 	def __init__(self):
 		super().__init__()
-		# getting display surface
+		# define screen
 		self.screen = pygame.display.get_surface()
 
 		# offset
@@ -73,7 +71,7 @@ class Camera(pygame.sprite.Group):
 		self.half_w = self.screen.get_size()[0] // 2
 		self.half_h = self.screen.get_size()[1] // 2
 
-		# map
+		# drawing map
 		self.map = pygame.image.load('graphics/levels/level_1/level_1.png').convert_alpha()
 		self.map_rect = self.map.get_rect(topleft=(0,0))
 

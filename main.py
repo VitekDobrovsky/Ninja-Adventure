@@ -4,7 +4,7 @@ from settings import *
 from level import Level
 
 
-class Game:
+class NinjaAdventure:
 	def __init__(self):
 		# set up
 		pygame.init()
@@ -31,5 +31,5 @@ class Game:
 
 
 if __name__ == '__main__':
-	game = Game()
+	game = NinjaAdventure()
 	game.run()

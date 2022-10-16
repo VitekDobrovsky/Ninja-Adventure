@@ -2,7 +2,7 @@ import pygame
 from os import walk
 from csv import reader
 
-
+# get multiple images from folder
 def  import_folder(path):
 	img_list = []
 	for _,__,img_files in walk(path):
@@ -12,6 +12,7 @@ def  import_folder(path):
 			img_list.append(image_surface)
 	return img_list
 
+# edit csv files to map create algorythm
 def import_csv_layout(path):
 	terrain_map = []
 	with open(path) as level_map:
@@ -20,11 +21,12 @@ def import_csv_layout(path):
 			terrain_map.append(list(row))
 		return terrain_map
 
-
+# draw rect
 def draw_rect(screen,x,y,width,height,color):
 	rect = pygame.Rect(x,y,width,height)
 	pygame.draw.rect(screen, color, rect)
 
+# debug
 def debug(value, screen):
 	font = pygame.font.Font('graphics/fonts/font.ttf' ,50)
 	text = font.render(value,True, (225,225,225))
@@ -32,7 +34,7 @@ def debug(value, screen):
 	pygame.draw.rect(screen, (0,0,0), rect)
 	screen.blit(text, rect)
 
-
+# get image from sprite sheet
 class Sprite_sheet:
 	def __init__(self, path):
 		self.sheet = pygame.image.load(path).convert_alpha()
