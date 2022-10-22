@@ -30,7 +30,9 @@ HITBOX_OFFSET_Y = {
 	'border_bridge': 0,
 	'border_corner': 20,
 	'border_horizontal': 90,
-	'border_banister': -63
+	'border_banister': -63,
+	'baricade_vertical': 0,
+	'baricade_horizontal': 0
 }
 HITBOX_OFFSET_X = {
 	'player': 0,
@@ -41,7 +43,9 @@ HITBOX_OFFSET_X = {
 	'border_bridge': 0,
 	'border_corner': 20,
 	'border_horizontal': 20,
-	'border_banister': 0
+	'border_banister': 0,
+	'baricade_vertical': 0,
+	'baricade_horizontal': 0
 
 }
 

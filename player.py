@@ -50,7 +50,7 @@ class Player(pygame.sprite.Sprite):
 		# animation
 		self.status = 'down_idle'
 		self.frame_index = 0
-		self.frame_speed = 0.15
+		self.frame_speed = 0.17
 
 		# stats
 		self.health = player_stats['health']
