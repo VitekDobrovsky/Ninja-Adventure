@@ -5,6 +5,7 @@ from tile import Baricade
 from player import Player
 from support import import_csv_layout
 from support import debug
+from enemy import Enemy
 
 
 class Level:
@@ -78,8 +79,19 @@ class Level:
 								self.baricades['right'].append((x,y))
 							elif col == '4':
 								self.baricades['up'].append((x,y))
+
 						elif style == 'entities':
-							self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites, self.visible_sprites)
+							if col == '394':
+								self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites, self.visible_sprites)
+							elif col == '390':
+								Enemy((x,y), [self.visible_sprites], 'Bamboo')
+							elif col == '391':
+								Enemy((x,y), [self.visible_sprites], 'Spirit_fire')
+							elif col == '392':
+								Enemy((x,y), [ self.visible_sprites], 'Racoon')
+							elif col == '395':
+								Enemy((x,y), [ self.visible_sprites], 'Reptile')
+
 						elif style == 'grass':
 							Tile((x,y), [self.visible_sprites], 'grass')
 						elif style == 'trees':

@@ -202,16 +202,10 @@ class Player(pygame.sprite.Sprite):
 		# draw health bar
 		draw_rect(self.screen,10,10, 200, BAR_HEIGHT, (134,122,4))
 		draw_rect(self.screen,10,10, self.health, BAR_HEIGHT, (255,0,0))
-		overlay = pygame.image.load('graphics/GUI/health_bar.png')
-		overlay_rect = overlay.get_rect(topleft= (5,5))
-		self.screen.blit(overlay, overlay_rect)
 		
 		# draw energy bar
 		draw_rect(self.screen,9,36, 152, BAR_HEIGHT, (114,106,133))
 		draw_rect(self.screen,10,36, self.energy, BAR_HEIGHT, (0,0,225))
-		overlay_e = pygame.image.load('graphics/GUI/energy_bar.png')
-		overlay_e_rect = overlay_e.get_rect(topleft= (5,31))
-		self.screen.blit(overlay_e, overlay_e_rect)
 
 	def draw_weapon(self):
 		# draw weapon

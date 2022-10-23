@@ -10,14 +10,14 @@ FPS      = 60
 TILESIZE = 64
 
 # bars
-BAR_HEIGHT = 13
+BAR_HEIGHT = 20
 FRAME_BAR_HEIGHT = 20
 
 # player stats
 player_stats = {
 	'speed': 7,
-	'health': 150,
-	'energy': 50
+	'health': 300,
+	'energy': 100
 }
 
 # hitboxes inflations
