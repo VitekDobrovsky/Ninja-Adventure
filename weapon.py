@@ -36,9 +36,6 @@ class Weapon(pygame.sprite.Sprite):
 		# draw weapon
 		self.visible_sprites.add(self)
 
-	def remove(self):
-		# remove weapon
-		self.visible_sprites.remove(self)
 	
 
 

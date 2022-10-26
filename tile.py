@@ -55,5 +55,6 @@ class Baricade(pygame.sprite.Sprite):
 	def check(self, island, clear):
 		if self.place == island:
 			if clear:
-				for group in self.groups:
-					group.remove(self)
+				self.kill()
+			#	for group in self.groups:
+			#		group.remove(self)

@@ -17,6 +17,8 @@ class Level:
 		# groups
 		self.visible_sprites = Camera()
 		self.obstacle_sprites = pygame.sprite.Group()
+		self.enemy = pygame.sprite.Group()
+		self.player = pygame.sprite.Group()
 
 		# trap
 		self.baricades = {
@@ -36,6 +38,7 @@ class Level:
 		self.clear = True
 
 		# enemy
+		self.enemy_speed_index = 1
 		self.enemies = {
 			'middle': {
 				'Racoon' : [],
@@ -106,7 +109,7 @@ class Level:
 
 						elif style == 'entities':
 							if col == '394':
-								self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites, self.visible_sprites)
+								self.player = Player((x,y), [self.visible_sprites, self.player], self.obstacle_sprites, self.visible_sprites)
 							elif col == '390':
 								self.sort_enemy(x, y, 'Bamboo')
 							elif col == '391':
@@ -172,46 +175,76 @@ class Level:
 		if current == 'middle' and not self.traped1:
 			for g in range(2):
 				pos = self.enemies['middle']['Bamboo'][randint(0, 3)]
-				Enemy(pos, [self.visible_sprites], 'Bamboo')
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				self.enemy_speed_index += 0.5
 
-			for h in range(2):
+			for l in range(2):
 				pos = self.enemies['middle']['Racoon'][randint(0,3)]
-				Enemy(pos, [self.visible_sprites], 'Racoon')
-			
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				self.enemy_speed_index += 0.5
+				
 			self.traped1 = False
+			self.enemy_speed_index = 1
 
 		if current == 'top' and not self.traped2:
 			for a in range(2):
 				pos = self.enemies['top']['Racoon'][randint(0, 3)]
-				Enemy(pos, [self.visible_sprites], 'Racoon')
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player)
+				self.enemy_speed_index += 0.5
 
 			for b in range(2):
 				pos = self.enemies['top']['Spirit_fire'][randint(0,3)]
-				Enemy(pos, [self.visible_sprites], 'Spirit_fire')
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Spirit_fire', self.obstacle_sprites, self.player)
+				self.enemy_speed_index += 0.5
 
 			self.traped2 = False
+			self.enemy_speed_index = 1
 
 		if current == 'left' and not self.traped3:
 			for c in range(2):
 				pos = self.enemies['left']['Racoon'][randint(0, 3)]
-				Enemy(pos, [self.visible_sprites], 'Racoon')
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player)
+				self.enemy_speed_index += 0.5
+				self.enemy_speed_index = 1
 
 			for d in range(2):
 				pos = self.enemies['left']['Reptile'][randint(0,3)]
-				Enemy(pos, [self.visible_sprites], 'Reptile')
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player)
+				self.enemy_speed_index += 0.5
 
 			self.traped3 = False
+			self.enemy_speed_index = 1
 
 		if current == 'right' and not self.traped4:
 			for e in range(2):
 				pos = self.enemies['right']['Bamboo'][randint(0, 3)]
-				Enemy(pos, [self.visible_sprites], 'Bamboo')
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player)
+				self.enemy_speed_index += 0.5
 
 			for f in range(2):
 				pos = self.enemies['right']['Reptile'][randint(0,3)]
-				Enemy(pos, [self.visible_sprites], 'Reptile')
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player)
+				self.enemy_speed_index += 0.5
 
 			self.traped4 = False
+			self.enemy_speed_index = 1
+
+	def enemy_move(self):
+		for enemy in self.enemy.sprites():
+			if self.player.hitbox.x < enemy.hitbox.x:
+				enemy.direction.x = -1
+			elif self.player.hitbox.x > enemy.hitbox.x:
+				enemy.direction.x = 1
+			else:
+				enemy.direction.x = 0
+
+			if self.player.hitbox.y < enemy.hitbox.y:
+				enemy.direction.y = -1
+			elif self.player.hitbox.y > enemy.hitbox.y:
+				enemy.direction.y = 1
+			else:
+				enemy.direction.y = 0
+
 
 
 	def trap_in_level(self):
@@ -272,6 +305,7 @@ class Level:
 		self.visible_sprites.update()
 		self.support_keys()
 		self.spawn_enemies()
+		self.enemy_move()
 		self.trap_in_level()
 
 class Camera(pygame.sprite.Group):

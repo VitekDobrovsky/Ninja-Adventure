@@ -214,7 +214,7 @@ class Player(pygame.sprite.Sprite):
 			self.weapon.player_rect = self.rect
 			self.weapon.show()
 		else:
-			self.weapon.remove()
+			self.weapon.kill()
 
 	def cooldown(self):
 		current_time = pygame.time.get_ticks()
@@ -243,3 +243,4 @@ class Player(pygame.sprite.Sprite):
 		self.draw_weapon()
 		self.animate()
 		self.health_bar()
+		

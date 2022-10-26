@@ -23,6 +23,7 @@ player_stats = {
 # hitboxes inflations
 HITBOX_OFFSET_Y = {
 	'player': -26,
+	'enemy': -26,
 	'grass': -20,
 	'border': -30,
 	'tree': -100,
