@@ -189,12 +189,12 @@ class Level:
 		if current == 'top' and not self.traped2:
 			for a in range(2):
 				pos = self.enemies['top']['Racoon'][randint(0, 3)]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
 
 			for b in range(2):
 				pos = self.enemies['top']['Spirit_fire'][randint(0,3)]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Spirit_fire', self.obstacle_sprites, self.player)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Spirit_fire', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
 
 			self.traped2 = False
@@ -203,13 +203,13 @@ class Level:
 		if current == 'left' and not self.traped3:
 			for c in range(2):
 				pos = self.enemies['left']['Racoon'][randint(0, 3)]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
 				self.enemy_speed_index = 1
 
 			for d in range(2):
 				pos = self.enemies['left']['Reptile'][randint(0,3)]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
 
 			self.traped3 = False
@@ -218,12 +218,12 @@ class Level:
 		if current == 'right' and not self.traped4:
 			for e in range(2):
 				pos = self.enemies['right']['Bamboo'][randint(0, 3)]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
 
 			for f in range(2):
 				pos = self.enemies['right']['Reptile'][randint(0,3)]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
 
 			self.traped4 = False
