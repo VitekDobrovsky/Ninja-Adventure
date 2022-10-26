@@ -6,6 +6,7 @@ from player import Player
 from support import import_csv_layout
 from support import debug
 from enemy import Enemy
+from random import randint
 
 
 class Level:
@@ -33,6 +34,29 @@ class Level:
 		self.traped4 = False
 		self.baricades_sprites = []
 		self.clear = True
+
+		# enemy
+		self.enemies = {
+			'middle': {
+				'Racoon' : [],
+				'Bamboo': []
+			},
+
+			'top': {
+				'Racoon': [],
+				'Spirit_fire': []
+			},
+
+			'right': {
+				'Reptile': [],
+				'Bamboo': []
+			},
+
+			'left': {
+				'Racoon': [],
+				'Reptile': []
+			}
+		}
 
 		# create map
 		self.layouts = {
@@ -84,13 +108,13 @@ class Level:
 							if col == '394':
 								self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites, self.visible_sprites)
 							elif col == '390':
-								Enemy((x,y), [self.visible_sprites], 'Bamboo')
+								self.sort_enemy(x, y, 'Bamboo')
 							elif col == '391':
-								Enemy((x,y), [self.visible_sprites], 'Spirit_fire')
+								self.sort_enemy(x, y, 'Spirit_fire')
 							elif col == '392':
-								Enemy((x,y), [ self.visible_sprites], 'Racoon')
+								self.sort_enemy(x, y, 'Racoon')
 							elif col == '395':
-								Enemy((x,y), [ self.visible_sprites], 'Reptile')
+								self.sort_enemy(x, y, 'Reptile')
 
 						elif style == 'grass':
 							Tile((x,y), [self.visible_sprites], 'grass')
@@ -103,18 +127,92 @@ class Level:
 	def get_island(self):
 		current = 'start'
 
-		if self.player.hitbox.y < 2204 and self.player.hitbox.y > 924:
-			if self.player.hitbox.x < 3388 and self.player.hitbox.x > 1608:
-				current = 'middle'
-		elif self.player.hitbox.y < 924:
+		if self.is_middle(self.player.hitbox.x, self.player.hitbox.y):
+			current = 'middle'
+		elif self.is_top(self.player.hitbox.y):
 			current = 'top'
 		
-		if self.player.hitbox.x > 3388:
+		if self.is_right(self.player.hitbox.x):
 			current = 'right'
-		elif self.player.hitbox.x < 1608:
+		elif self.is_left(self.player.hitbox.x):
 			current = 'left'
 
 		return current
+
+	def is_middle(self, x, y):
+		if y < 2204 and y > 924:
+			if x < 3388 and x > 1608:
+				return True
+
+	def is_left(self, x):
+		if x < 1608:
+			return True 
+
+	def is_right(self,x):
+		if x > 3388:
+			return True
+
+	def is_top(self, y):
+		if y < 924:
+			return True
+
+	def sort_enemy(self, x, y, type):
+		if self.is_middle(x, y):
+			self.enemies['middle'][type].append((x,y))
+		elif self.is_top(y):
+			self.enemies['top'][type].append((x,y))
+		elif self.is_left(x):
+			self.enemies['left'][type].append((x,y))
+		elif self.is_right(x):
+			self.enemies['right'][type].append((x,y))
+
+	def spawn_enemies(self):
+		current = self.get_island()
+
+		if current == 'middle' and not self.traped1:
+			for g in range(2):
+				pos = self.enemies['middle']['Bamboo'][randint(0, 3)]
+				Enemy(pos, [self.visible_sprites], 'Bamboo')
+
+			for h in range(2):
+				pos = self.enemies['middle']['Racoon'][randint(0,3)]
+				Enemy(pos, [self.visible_sprites], 'Racoon')
+			
+			self.traped1 = False
+
+		if current == 'top' and not self.traped2:
+			for a in range(2):
+				pos = self.enemies['top']['Racoon'][randint(0, 3)]
+				Enemy(pos, [self.visible_sprites], 'Racoon')
+
+			for b in range(2):
+				pos = self.enemies['top']['Spirit_fire'][randint(0,3)]
+				Enemy(pos, [self.visible_sprites], 'Spirit_fire')
+
+			self.traped2 = False
+
+		if current == 'left' and not self.traped3:
+			for c in range(2):
+				pos = self.enemies['left']['Racoon'][randint(0, 3)]
+				Enemy(pos, [self.visible_sprites], 'Racoon')
+
+			for d in range(2):
+				pos = self.enemies['left']['Reptile'][randint(0,3)]
+				Enemy(pos, [self.visible_sprites], 'Reptile')
+
+			self.traped3 = False
+
+		if current == 'right' and not self.traped4:
+			for e in range(2):
+				pos = self.enemies['right']['Bamboo'][randint(0, 3)]
+				Enemy(pos, [self.visible_sprites], 'Bamboo')
+
+			for f in range(2):
+				pos = self.enemies['right']['Reptile'][randint(0,3)]
+				Enemy(pos, [self.visible_sprites], 'Reptile')
+
+			self.traped4 = False
+
 
 	def trap_in_level(self):
 		current = self.get_island()
@@ -173,6 +271,7 @@ class Level:
 		self.visible_sprites.custom_draw(self.player)
 		self.visible_sprites.update()
 		self.support_keys()
+		self.spawn_enemies()
 		self.trap_in_level()
 
 class Camera(pygame.sprite.Group):
