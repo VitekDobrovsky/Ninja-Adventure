@@ -7,6 +7,7 @@ from support import import_csv_layout
 from support import debug
 from enemy import Enemy
 from random import randint
+from math import sin 
 
 
 class Level:
@@ -164,6 +165,14 @@ class Level:
 		if y < 924:
 			return True
 
+	def wave_value(self):
+		value = sin(pygame.time.get_ticks())
+
+		if value > 0:
+			return 225
+		else:
+			return 0
+
 	def sort_enemy(self, x, y, type):
 		if self.is_middle(x, y):
 			self.enemies['middle'][type].append((x,y))
@@ -313,13 +322,12 @@ class Level:
 			elif self.player.direction.y < 0:
 				enemy.direction.y = -distance
 
-	def blickering(self, entity):
-		pass
-
 	def damage_enemy(self):
 		for enemy in self.enemy.sprites():
 			if self.player.weapon.rect.colliderect(enemy) and self.player.is_weapon:
 				self.push_enemy(enemy)
+				alpha = self.wave_value()
+				enemy.image.set_alpha(alpha)
 				if self.can_enemy_damage:
 					self.enemy_damage_time = pygame.time.get_ticks()
 					self.can_enemy_damage = False
@@ -327,6 +335,8 @@ class Level:
 					if enemy.health <= 0:
 						enemy.kill()
 						self.enemy_count -= 1
+			else:
+				enemy.image.set_alpha(255)
 
 	def count_enemies(self):
 		for enemy in self.enemy.sprites():
@@ -343,7 +353,6 @@ class Level:
 			if current_time - self.enemy_damage_time >= self.enemy_damage_cooldown:
 				self.can_enemy_damage = True
 		
-
 	def run(self):
 		self.visible_sprites.custom_draw(self.player)
 		self.visible_sprites.update()

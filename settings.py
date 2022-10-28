@@ -20,6 +20,15 @@ player_stats = {
 	'energy': 100
 }
 
+# enemies
+ENEMY_HEALTH = {
+	'Bamboo': 90,
+	'Racoon': 90,
+	'Reptile': 120,
+	'Spirit_fire': 60
+}
+
+
 # hitboxes inflations
 HITBOX_OFFSET_Y = {
 	'player': -26,
