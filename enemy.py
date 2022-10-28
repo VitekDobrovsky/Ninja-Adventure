@@ -23,7 +23,10 @@ class Enemy(pygame.sprite.Sprite):
 
 		# move
 		self.direction = pygame.math.Vector2()
-		self.speed =  speed# TODO: diferent enemy = diferent speed, and get it from settings
+		self.speed = speed
+
+		# stats
+		self.health = 100 # TODO: change health according to type of enemy
 
 	def move(self):
 		# normalize direction
@@ -48,11 +51,7 @@ class Enemy(pygame.sprite.Sprite):
 						self.hitbox.right = sprite.hitbox.left
 					if self.direction.x < 0:
 						self.hitbox.left = sprite.hitbox.right
-			if self.player.hitbox.colliderect(self.hitbox):
-					if self.direction.x > 0:
-						self.hitbox.right = self.player.hitbox.left
-					if self.direction.x < 0:
-						self.hitbox.left = self.player.hitbox.right
+
 
 		# check vertical collision
 		elif direction == 'vertical':
@@ -62,13 +61,7 @@ class Enemy(pygame.sprite.Sprite):
 						self.hitbox.bottom = sprite.hitbox.top
 					if self.direction.y < 0:
 						self.hitbox.top = sprite.hitbox.bottom
-			if self.player.hitbox.colliderect(self.hitbox):
-					if self.direction.y > 0:
-						self.hitbox.bottom = self.player.hitbox.top
-					if self.direction.y < 0:
-						self.hitbox.top = self.player.hitbox.bottom
 
 	def update(self):
 		self.move()
-		print(self.hitbox)
 

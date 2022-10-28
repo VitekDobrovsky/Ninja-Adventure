@@ -18,7 +18,6 @@ class Level:
 		self.visible_sprites = Camera()
 		self.obstacle_sprites = pygame.sprite.Group()
 		self.enemy = pygame.sprite.Group()
-		self.player = pygame.sprite.Group()
 
 		# trap
 		self.baricades = {
@@ -60,6 +59,12 @@ class Level:
 				'Reptile': []
 			}
 		}
+
+		# enemy damage
+		self.can_enemy_damage = True
+		self.enemy_damage_time = None
+		self.enemy_damage_cooldown = 500
+		self.enemy_count = 0
 
 		# create map
 		self.layouts = {
@@ -109,7 +114,7 @@ class Level:
 
 						elif style == 'entities':
 							if col == '394':
-								self.player = Player((x,y), [self.visible_sprites, self.player], self.obstacle_sprites, self.visible_sprites)
+								self.player = Player((x,y), [self.visible_sprites], self.obstacle_sprites, self.visible_sprites)
 							elif col == '390':
 								self.sort_enemy(x, y, 'Bamboo')
 							elif col == '391':
@@ -231,21 +236,19 @@ class Level:
 
 	def enemy_move(self):
 		for enemy in self.enemy.sprites():
-			if self.player.hitbox.x < enemy.hitbox.x:
+			if self.player.hitbox.x + 64 < enemy.hitbox.x:
 				enemy.direction.x = -1
-			elif self.player.hitbox.x > enemy.hitbox.x:
+			elif self.player.hitbox.x - 64 > enemy.hitbox.x:
 				enemy.direction.x = 1
 			else:
 				enemy.direction.x = 0
 
-			if self.player.hitbox.y < enemy.hitbox.y:
+			if self.player.hitbox.y + 64 < enemy.hitbox.y:
 				enemy.direction.y = -1
-			elif self.player.hitbox.y > enemy.hitbox.y:
+			elif self.player.hitbox.y - 64 > enemy.hitbox.y:
 				enemy.direction.y = 1
 			else:
 				enemy.direction.y = 0
-
-
 
 	def trap_in_level(self):
 		current = self.get_island()
@@ -264,6 +267,7 @@ class Level:
 			
 			self.traped1 = True
 			self.clear = False
+			self.count_enemies()
 
 		elif current == 'top' and not self.traped2:
 			# top baricades
@@ -272,6 +276,7 @@ class Level:
 			
 			self.traped2 = True
 			self.clear = False
+			self.count_enemies()
 
 		elif current == 'left' and not self.traped3:
 			# left baricades
@@ -280,6 +285,7 @@ class Level:
 			
 			self.traped3 = True
 			self.clear = False
+			self.count_enemies()
 
 		elif current == 'right' and not self.traped4:
 			# right baricades
@@ -288,25 +294,65 @@ class Level:
 			
 			self.traped4 = True
 			self.clear = False
+			self.count_enemies()
 
 		# removing baricades
 		for baricade in self.baricades_sprites:
 			baricade.check(current, self.clear)
 
-	def support_keys(self):
-		# clear after r
-		keys = pygame.key.get_pressed()
+	def push_enemy(self, enemy):
+		distance = 15
+		if self.player.charge:
+			if self.player.direction.x > 0:
+				enemy.direction.x = distance
+			elif self.player.direction.x < 0:
+				enemy.direction.x = -distance
 
-		if keys[pygame.K_r]:
+			if self.player.direction.y > 0:
+				enemy.direction.y = distance
+			elif self.player.direction.y < 0:
+				enemy.direction.y = -distance
+
+	def blickering(self, entity):
+		pass
+
+	def damage_enemy(self):
+		for enemy in self.enemy.sprites():
+			if self.player.weapon.rect.colliderect(enemy) and self.player.is_weapon:
+				self.push_enemy(enemy)
+				if self.can_enemy_damage:
+					self.enemy_damage_time = pygame.time.get_ticks()
+					self.can_enemy_damage = False
+					enemy.health -= self.player.weapon.damage
+					if enemy.health <= 0:
+						enemy.kill()
+						self.enemy_count -= 1
+
+	def count_enemies(self):
+		for enemy in self.enemy.sprites():
+			self.enemy_count += 1
+
+	def clear_island(self):
+		if self.enemy_count == 0:
 			self.clear = True
+
+	def cooldown(self):
+		current_time = pygame.time.get_ticks()
+
+		if not self.can_enemy_damage:
+			if current_time - self.enemy_damage_time >= self.enemy_damage_cooldown:
+				self.can_enemy_damage = True
+		
 
 	def run(self):
 		self.visible_sprites.custom_draw(self.player)
 		self.visible_sprites.update()
-		self.support_keys()
+		self.clear_island()
 		self.spawn_enemies()
 		self.enemy_move()
+		self.damage_enemy()
 		self.trap_in_level()
+		self.cooldown()
 
 class Camera(pygame.sprite.Group):
 	def __init__(self):

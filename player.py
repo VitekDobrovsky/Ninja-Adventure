@@ -64,6 +64,7 @@ class Player(pygame.sprite.Sprite):
 
 		# weapon
 		self.weapon = Weapon(self.rect, self.status, self.visible_sprites)
+		self.is_weapon = False
 
 		# charge
 		self.charge = False
@@ -213,8 +214,10 @@ class Player(pygame.sprite.Sprite):
 			self.weapon.status = self.status
 			self.weapon.player_rect = self.rect
 			self.weapon.show()
+			self.is_weapon = True
 		else:
 			self.weapon.kill()
+			self.is_weapon = False
 
 	def cooldown(self):
 		current_time = pygame.time.get_ticks()

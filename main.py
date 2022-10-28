@@ -33,3 +33,16 @@ class NinjaAdventure:
 if __name__ == '__main__':
 	game = NinjaAdventure()
 	game.run()
+
+'''
+TODO: 
+	1. fix enemy collision
+	2. push enemy after attack
+	3. get damage
+	4. minus energy
+	5. better stats bars
+	6. baricade animation
+	7. blickering after damage to enemy
+	8. enemy dead animation
+	8. aim assist
+'''

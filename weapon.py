@@ -8,6 +8,7 @@ class Weapon(pygame.sprite.Sprite):
 		self.player_rect = player_rect
 		self.screen = pygame.display.get_surface()
 		self.visible_sprites = visible_sprites
+		self.damage = 35
 
 		# define image and rect
 		self.image = pygame.transform.scale(pygame.image.load('graphics/weapons/sword.png').convert_alpha(), (22,40))
