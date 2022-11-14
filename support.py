@@ -34,6 +34,17 @@ def debug(value, screen):
 	pygame.draw.rect(screen, (0,0,0), rect)
 	screen.blit(text, rect)
 
+# text
+class Text:
+	def __init__(self, screen, text, path, size, pos, color):
+		self.screen = screen
+		font = pygame.font.Font(path, size)
+		self.text_surf = font.render(text, True, color)
+		self.text_rect = self.text_surf.get_rect(center = pos)
+
+	def draw(self):
+		self.screen.blit(self.text_surf, self.text_rect)
+
 # get image from sprite sheet
 class Sprite_sheet:
 	def __init__(self, path):

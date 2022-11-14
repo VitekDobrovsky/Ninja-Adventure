@@ -17,7 +17,7 @@ FRAME_BAR_HEIGHT = 20
 player_stats = {
 	'speed': 7,
 	'health': 300,
-	'energy': 100
+	'energy': 150
 }
 
 # enemies

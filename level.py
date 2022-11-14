@@ -3,8 +3,7 @@ from settings import *
 from tile import Tile
 from tile import Baricade
 from player import Player
-from support import import_csv_layout
-from support import debug
+from support import *
 from enemy import Enemy
 from random import randint
 from math import sin 
@@ -20,7 +19,7 @@ class Level:
 		self.obstacle_sprites = pygame.sprite.Group()
 		self.enemy = pygame.sprite.Group()
 
-		# trap
+		# trap on isand
 		self.baricades = {
 			'middle': {
 				'horizontal': [],
@@ -66,6 +65,13 @@ class Level:
 		self.enemy_damage_time = None
 		self.enemy_damage_cooldown = 500
 		self.enemy_count = 0
+
+		# 'CLEAR' text
+		self.text1 = Text(self.screen, 'clear', 'graphics/fonts/Gameplay.ttf', 100, (WIDTH/2, HEIGHT/3), 'orange'), Text(self.screen, 'clear', 'graphics/fonts/Gameplay.ttf', 105, (WIDTH/2, HEIGHT/3), 'black')	
+		self.text1[0].text_surf.set_alpha(0)
+		self.text1[1].text_surf.set_alpha(0)
+		self.al = 0
+		self.clear_tm = 0
 
 		# create map
 		self.layouts = {
@@ -146,6 +152,9 @@ class Level:
 		elif self.is_left(self.player.hitbox.x):
 			current = 'left'
 
+		elif self.player.hitbox.y > 2203:
+			current = 'start'
+
 		return current
 
 	def is_middle(self, x, y):
@@ -166,27 +175,35 @@ class Level:
 			return True
 
 	def wave_value(self):
+		# sin value
 		value = sin(pygame.time.get_ticks())
 
+		# choose
 		if value > 0:
 			return 225
 		else:
 			return 0
 
 	def sort_enemy(self, x, y, type):
+		# enemy sorting to enemy lists 
 		if self.is_middle(x, y):
 			self.enemies['middle'][type].append((x,y))
+
 		elif self.is_top(y):
 			self.enemies['top'][type].append((x,y))
+
 		elif self.is_left(x):
 			self.enemies['left'][type].append((x,y))
+
 		elif self.is_right(x):
 			self.enemies['right'][type].append((x,y))
 
 	def spawn_enemies(self):
+		# current island
 		current = self.get_island()
 
-		if current == 'middle' and not self.traped1:
+		# middle enemies
+		if current == 'middle':
 			for g in range(2):
 				pos = self.enemies['middle']['Bamboo'][randint(0, 3)]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index)
@@ -200,7 +217,8 @@ class Level:
 			self.traped1 = False
 			self.enemy_speed_index = 1
 
-		if current == 'top' and not self.traped2:
+		# top enemies
+		if current == 'top':
 			for a in range(2):
 				pos = self.enemies['top']['Racoon'][randint(0, 3)]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
@@ -214,7 +232,8 @@ class Level:
 			self.traped2 = False
 			self.enemy_speed_index = 1
 
-		if current == 'left' and not self.traped3:
+		# left enemies
+		if current == 'left':
 			for c in range(2):
 				pos = self.enemies['left']['Racoon'][randint(0, 3)]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
@@ -229,7 +248,8 @@ class Level:
 			self.traped3 = False
 			self.enemy_speed_index = 1
 
-		if current == 'right' and not self.traped4:
+		# right enemies
+		if current == 'right':
 			for e in range(2):
 				pos = self.enemies['right']['Bamboo'][randint(0, 3)]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index)
@@ -269,54 +289,73 @@ class Level:
 			bar3 = Baricade(self.baricades['middle']['horizontal'][0], [self.visible_sprites, self.obstacle_sprites], 'baricade_horizontal', 'middle')
 			bar4 = Baricade(self.baricades['middle']['horizontal'][1], [self.visible_sprites, self.obstacle_sprites], 'baricade_horizontal', 'middle')
 			
+			# append baricades to list
 			self.baricades_sprites.append(bar1)
 			self.baricades_sprites.append(bar2)
 			self.baricades_sprites.append(bar3)
 			self.baricades_sprites.append(bar4)
 			
+			# enemies set up for island
+			self.spawn_enemies()
+			self.count_enemies()
+
 			self.traped1 = True
 			self.clear = False
-			self.count_enemies()
 
 		elif current == 'top' and not self.traped2:
 			# top baricades
 			bar5 = Baricade(self.baricades['up'][0], [self.visible_sprites, self.obstacle_sprites], 'baricade_horizontal', 'top')
+			
 			self.baricades_sprites.append(bar5)
 			
+			# enemies set up for island
+			self.spawn_enemies()
+			self.count_enemies()
+
 			self.traped2 = True
 			self.clear = False
-			self.count_enemies()
 
 		elif current == 'left' and not self.traped3:
 			# left baricades
 			bar6 = Baricade(self.baricades['left'][0], [self.visible_sprites, self.obstacle_sprites], 'baricade_vertical', 'left')
 			self.baricades_sprites.append(bar6)
 			
+			# enemies set up for island
+			self.spawn_enemies()
+			self.count_enemies()
+
 			self.traped3 = True
 			self.clear = False
-			self.count_enemies()
 
 		elif current == 'right' and not self.traped4:
 			# right baricades
 			bar7 = Baricade(self.baricades['right'][0], [self.visible_sprites, self.obstacle_sprites], 'baricade_vertical', 'right')
 			self.baricades_sprites.append(bar7)
 			
+			# enemies set up for island
+			self.spawn_enemies()
+			self.count_enemies()
+
 			self.traped4 = True
 			self.clear = False
-			self.count_enemies()
+
 
 		# removing baricades
 		for baricade in self.baricades_sprites:
 			baricade.check(current, self.clear)
 
 	def push_enemy(self, enemy):
-		distance = 15
+		# knockback distance
+		distance = 20
+
 		if self.player.charge:
+			# x
 			if self.player.direction.x > 0:
 				enemy.direction.x = distance
 			elif self.player.direction.x < 0:
 				enemy.direction.x = -distance
 
+			# y
 			if self.player.direction.y > 0:
 				enemy.direction.y = distance
 			elif self.player.direction.y < 0:
@@ -325,12 +364,19 @@ class Level:
 	def damage_enemy(self):
 		for enemy in self.enemy.sprites():
 			if self.player.weapon.rect.colliderect(enemy) and self.player.is_weapon:
+				# push enemy
 				self.push_enemy(enemy)
+				
+				# animation
 				alpha = self.wave_value()
 				enemy.image.set_alpha(alpha)
+
 				if self.can_enemy_damage:
+					# cooldown
 					self.enemy_damage_time = pygame.time.get_ticks()
 					self.can_enemy_damage = False
+
+					# subtract health
 					enemy.health -= self.player.weapon.damage
 					if enemy.health <= 0:
 						enemy.kill()
@@ -342,6 +388,21 @@ class Level:
 		for enemy in self.enemy.sprites():
 			self.enemy_count += 1
 
+	def clear_text(self):
+		if self.al >= 0:
+			self.al -= 5
+		self.text1[1].draw()
+		self.text1[0].draw()
+		self.text1[0].text_surf.set_alpha(self.al)
+		self.text1[1].text_surf.set_alpha(self.al)
+
+		if self.clear_tm <= 50 and self.enemy_count == 0 and self.get_island() != 'start':
+			self.clear_tm += 1
+			#self.text1.text_surf.set_alpha(255)
+			self.al = 255
+		if self.enemy_count != 0:
+			self.clear_tm = 0
+
 	def clear_island(self):
 		if self.enemy_count == 0:
 			self.clear = True
@@ -352,15 +413,15 @@ class Level:
 		if not self.can_enemy_damage:
 			if current_time - self.enemy_damage_time >= self.enemy_damage_cooldown:
 				self.can_enemy_damage = True
-		
+
 	def run(self):
 		self.visible_sprites.custom_draw(self.player)
 		self.visible_sprites.update()
 		self.clear_island()
-		self.spawn_enemies()
 		self.enemy_move()
 		self.damage_enemy()
 		self.trap_in_level()
+		self.clear_text()
 		self.cooldown()
 
 class Camera(pygame.sprite.Group):

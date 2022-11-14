@@ -35,10 +35,8 @@ if __name__ == '__main__':
 	game.run()
 
 '''
-TODO: 
-	1. fix enemy collision
-	2. push enemy after attack
-	3. get damage
+TODO:
+	3. get damages
 	4. minus energy
 	5. better stats bars
 	6. baricade animation
