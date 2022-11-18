@@ -6,7 +6,8 @@ from player import Player
 from support import *
 from enemy import Enemy
 from random import randint
-from math import sin 
+from math import sin
+from gui import GUI 
 
 
 class Level:
@@ -59,6 +60,8 @@ class Level:
 				'Reptile': []
 			}
 		}
+ 
+		self.can_give_damage = False
 
 		# enemy damage
 		self.can_enemy_damage = True
@@ -87,6 +90,9 @@ class Level:
 			}
 
 		self.create_map()	
+
+		# GUI
+		self.gui = GUI(self.player)
 
 	def create_map(self):
 		# drawing map
@@ -267,17 +273,23 @@ class Level:
 		for enemy in self.enemy.sprites():
 			if self.player.hitbox.x + 64 < enemy.hitbox.x:
 				enemy.direction.x = -1
+				enemy.can_attack = False
 			elif self.player.hitbox.x - 64 > enemy.hitbox.x:
 				enemy.direction.x = 1
+				enemy.can_attack = False
 			else:
 				enemy.direction.x = 0
+				enemy.can_attack = True
 
 			if self.player.hitbox.y + 64 < enemy.hitbox.y:
 				enemy.direction.y = -1
+				enemy.can_attack = False
 			elif self.player.hitbox.y - 64 > enemy.hitbox.y:
 				enemy.direction.y = 1
+				enemy.can_attack = False
 			else:
 				enemy.direction.y = 0
+				enemy.can_attack = True
 
 	def trap_in_level(self):
 		current = self.get_island()
@@ -361,6 +373,17 @@ class Level:
 			elif self.player.direction.y < 0:
 				enemy.direction.y = -distance
 
+	def heal_after(self):
+		if self.clear_tm == 1:
+			self.player.health += 100
+
+	def damage_player(self):
+		for enemy in self.enemy.sprites():
+			if enemy.can_attack and self.player.vulnerable and enemy.direction == (0,0):
+				self.player.health -= 10
+				self.player.vulnerable = False
+				self.player.damage_time = pygame.time.get_ticks()
+
 	def damage_enemy(self):
 		for enemy in self.enemy.sprites():
 			if self.player.weapon.rect.colliderect(enemy) and self.player.is_weapon:
@@ -398,7 +421,6 @@ class Level:
 
 		if self.clear_tm <= 50 and self.enemy_count == 0 and self.get_island() != 'start':
 			self.clear_tm += 1
-			#self.text1.text_surf.set_alpha(255)
 			self.al = 255
 		if self.enemy_count != 0:
 			self.clear_tm = 0
@@ -420,7 +442,10 @@ class Level:
 		self.clear_island()
 		self.enemy_move()
 		self.damage_enemy()
+		self.damage_player()
+		self.heal_after()
 		self.trap_in_level()
+		self.gui.draw()
 		self.clear_text()
 		self.cooldown()
 

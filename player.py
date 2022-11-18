@@ -56,6 +56,11 @@ class Player(pygame.sprite.Sprite):
 		self.health = player_stats['health']
 		self.energy = player_stats['energy']
 
+		# take_damage
+		self.vulnerable = True 
+		self.damage_time = None
+		self.damage_cooldown = 400
+
 		# attack
 		self.can_attack = True
 		self.attack_cooldown = 600
@@ -163,7 +168,11 @@ class Player(pygame.sprite.Sprite):
 						self.hitbox.bottom = sprite.hitbox.top
 					if self.direction.y < 0:
 						self.hitbox.top = sprite.hitbox.bottom
-		
+	
+	def normalize_health(self):
+		if self.health > player_stats['health']:
+			self.health = player_stats['health']
+
 	def get_status(self):
 		# getting y status
 		if self.direction.y < 0:
@@ -203,17 +212,6 @@ class Player(pygame.sprite.Sprite):
 
 		self.image = animation[int(self.frame_index)]
 
-	def health_bar(self):
-		#NOTE: have to make completely new graphics
-
-		# draw health bar
-		draw_rect(self.screen,10,10, 200, BAR_HEIGHT, (134,122,4))
-		draw_rect(self.screen,10,10, self.health, BAR_HEIGHT, (255,0,0))
-		
-		# draw energy bar
-		draw_rect(self.screen,9,36, 152, BAR_HEIGHT, (114,106,133))
-		draw_rect(self.screen,10,36, self.energy, BAR_HEIGHT, (0,0,225))
-
 	def draw_weapon(self):
 		# draw weapon
 		if self.charge or self.stop:
@@ -248,13 +246,18 @@ class Player(pygame.sprite.Sprite):
 			if current_time - self.stop_time >= self.stop_cooldown:
 				self.stop = False
 
+		# vulnerable cooldown
+		if not self.vulnerable:
+			if current_time - self.damage_time >= self.damage_cooldown:
+				self.vulnerable = True
+
 	def update(self):
 		self.cooldown()
 		self.input()
 		self.add_energy()
 		self.move()
 		self.get_status()
+		self.normalize_health()
 		self.draw_weapon()
 		self.animate()
-		self.health_bar()
 		

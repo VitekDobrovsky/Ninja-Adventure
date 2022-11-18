@@ -44,6 +44,9 @@ class Enemy(pygame.sprite.Sprite):
 		# stats
 		self.health = ENEMY_HEALTH[type]
 
+		# attack
+		self.can_attack = False
+
 	def move(self):
 		# normalize direction
 		if self.direction.magnitude() != 0:
