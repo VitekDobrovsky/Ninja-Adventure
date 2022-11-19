@@ -22,9 +22,12 @@ def import_csv_layout(path):
 		return terrain_map
 
 # draw rect
-def draw_rect(screen,x,y,width,height,color):
-	rect = pygame.Rect(x,y,width,height)
-	pygame.draw.rect(screen, color, rect)
+def draw_rect(screen,x,y,width,height,color, alpha):
+	surface = pygame.Surface((width, height))
+	surface.fill(color)
+	surface.set_alpha(alpha)
+	rect = surface.get_rect(topleft=(x,y))
+	screen.blit(surface, rect)
 
 # debug
 def debug(value, screen):
