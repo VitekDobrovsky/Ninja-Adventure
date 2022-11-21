@@ -22,9 +22,7 @@ class Level:
 
 		# trap on isand
 		self.baricades = {
-			'middle': {
-				'horizontal': [],
-				'vertical': []},
+			'middle': [],
 			'left': [],
 			'right': [],
 			'up': []
@@ -35,7 +33,10 @@ class Level:
 		self.traped3 = False
 		self.traped4 = False
 		self.baricades_sprites = []
+		self.baricade_time = None
+		self.baricade_an_index = 0
 		self.clear = True
+		self.baricade_animation = False
 
 		# enemy
 		self.enemy_speed_index = 1
@@ -127,9 +128,7 @@ class Level:
 							Tile((x,y), [ self.obstacle_sprites], 'border_banister')
 						elif style == 'baricades':
 							if col == '0':
-								self.baricades['middle']['vertical'].append((x,y))
-							elif col == '1':
-								self.baricades['middle']['horizontal'].append((x,y))
+								self.baricades['middle'].append((x,y))
 							elif col == '2':
 								self.baricades['left'].append((x,y))
 							elif col == '3':
@@ -308,16 +307,10 @@ class Level:
 		
 		if current == 'middle' and not self.traped1:
 			# middle baricades
-			bar1 = Baricade(self.baricades['middle']['vertical'][0], [self.visible_sprites, self.obstacle_sprites], 'baricade_vertical', 'middle')
-			bar2 = Baricade(self.baricades['middle']['vertical'][1], [self.visible_sprites, self.obstacle_sprites], 'baricade_vertical', 'middle')
-			bar3 = Baricade(self.baricades['middle']['horizontal'][0], [self.visible_sprites, self.obstacle_sprites], 'baricade_horizontal', 'middle')
-			bar4 = Baricade(self.baricades['middle']['horizontal'][1], [self.visible_sprites, self.obstacle_sprites], 'baricade_horizontal', 'middle')
-			
-			# append baricades to list
-			self.baricades_sprites.append(bar1)
-			self.baricades_sprites.append(bar2)
-			self.baricades_sprites.append(bar3)
-			self.baricades_sprites.append(bar4)
+			index = 0 
+			for i in self.baricades['middle']:
+				Baricade(self.baricades['middle'][index], [self.visible_sprites, self.obstacle_sprites], self.baricades_sprites, 'middle')
+				index += 1
 			
 			# enemies set up for island
 			self.spawn_enemies()
@@ -325,12 +318,15 @@ class Level:
 
 			self.traped1 = True
 			self.clear = False
+			self.baricade_time = pygame.time.get_ticks()
+			self.baricade_animation = True
 
 		elif current == 'top' and not self.traped2:
 			# top baricades
-			bar5 = Baricade(self.baricades['up'][0], [self.visible_sprites, self.obstacle_sprites], 'baricade_horizontal', 'top')
-			
-			self.baricades_sprites.append(bar5)
+			index = 0
+			for i in self.baricades['top']:
+				Baricade(self.baricades['up'][index], [self.visible_sprites, self.obstacle_sprites], self.baricades_sprites, 'top')
+				index += 1
 			
 			# enemies set up for island
 			self.spawn_enemies()
@@ -338,11 +334,15 @@ class Level:
 
 			self.traped2 = True
 			self.clear = False
+			self.baricade_time = pygame.time.get_ticks()
+			self.baricade_animation = True
 
 		elif current == 'left' and not self.traped3:
 			# left baricades
-			bar6 = Baricade(self.baricades['left'][0], [self.visible_sprites, self.obstacle_sprites], 'baricade_vertical', 'left')
-			self.baricades_sprites.append(bar6)
+			index = 0
+			for i in self.baricades['left']:
+				Baricade(self.baricades['left'][index], [self.visible_sprites, self.obstacle_sprites], self.baricades_sprites, 'left')
+				index += 1
 			
 			# enemies set up for island
 			self.spawn_enemies()
@@ -350,11 +350,15 @@ class Level:
 
 			self.traped3 = True
 			self.clear = False
+			self.baricade_time = pygame.time.get_ticks()
+			self.baricade_animation = True
 
 		elif current == 'right' and not self.traped4:
 			# right baricades
-			bar7 = Baricade(self.baricades['right'][0], [self.visible_sprites, self.obstacle_sprites], 'baricade_vertical', 'right')
-			self.baricades_sprites.append(bar7)
+			index = 0
+			for i in self.baricades['right']:
+				Baricade(self.baricades['right'][index], [self.visible_sprites, self.obstacle_sprites], self.baricades_sprites, 'right')
+				index += 1
 			
 			# enemies set up for island
 			self.spawn_enemies()
@@ -362,7 +366,8 @@ class Level:
 
 			self.traped4 = True
 			self.clear = False
-
+			self.baricade_time = pygame.time.get_ticks()
+			self.baricade_animation = True
 
 		# removing baricades
 		for baricade in self.baricades_sprites:
@@ -432,11 +437,11 @@ class Level:
 		self.e.draw()
 		self.a.draw()
 		self.r.draw()
-		draw_rect(self.screen, WIDTH/2 - 159,HEIGHT/3 - 20 ,35,60, 'orange', self.al)
-		draw_rect(self.screen, WIDTH/2 - 80,HEIGHT/3 + 10 ,40,10, 'orange', self.al)
-		draw_rect(self.screen, WIDTH/2 - 20 ,HEIGHT/3 - 20,35,60, 'orange', self.al)
-		draw_rect(self.screen, WIDTH/2 + 50,HEIGHT/3 - 20,30,60, 'orange', self.al)
-		draw_rect(self.screen, WIDTH/2 + 110,HEIGHT/3 - 30,40,55, 'orange', self.al)
+		draw_surface(self.screen, WIDTH/2 - 159,HEIGHT/3 - 20 ,35,60, 'orange', self.al)
+		draw_surface(self.screen, WIDTH/2 - 80,HEIGHT/3 + 10 ,40,10, 'orange', self.al)
+		draw_surface(self.screen, WIDTH/2 - 20 ,HEIGHT/3 - 20,35,60, 'orange', self.al)
+		draw_surface(self.screen, WIDTH/2 + 50,HEIGHT/3 - 20,30,60, 'orange', self.al)
+		draw_surface(self.screen, WIDTH/2 + 110,HEIGHT/3 - 30,40,55, 'orange', self.al)
 		self.text1[1].draw()
 		self.text1[0].draw()
 
@@ -458,12 +463,26 @@ class Level:
 		if self.enemy_count == 0:
 			self.clear = True
 
+	def baricade_animations(self):
+		if self.baricade_animation:
+			for baricade in self.baricades_sprites:
+				
+				if self.baricade_an_index <= 2.9:
+					self.baricade_an_index += 0.005
+
+				baricade.image = baricade.frames[int(self.baricade_an_index)]
+
+
 	def cooldown(self):
 		current_time = pygame.time.get_ticks()
 
 		if not self.can_enemy_damage:
 			if current_time - self.enemy_damage_time >= self.enemy_damage_cooldown:
 				self.can_enemy_damage = True
+
+		if self.baricade_animation:
+			if current_time - self.baricade_time >= 1000:
+				self.baricade_animation = False
 
 	def run(self):
 		self.visible_sprites.custom_draw(self.player)
@@ -473,6 +492,7 @@ class Level:
 		self.damage_enemy()
 		self.damage_player()
 		self.heal_after()
+		self.baricade_animations()
 		self.trap_in_level()
 		self.gui.draw()
 		self.clear_text()

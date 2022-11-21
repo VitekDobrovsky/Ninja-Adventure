@@ -1,6 +1,7 @@
 import pygame
 from settings import *
 from support import import_folder
+from support import Sprite_sheet
 from random import choice
 
 
@@ -19,11 +20,6 @@ class Tile(pygame.sprite.Sprite):
 			self.image = choice(import_folder('graphics/tiles/logs')).convert_alpha()
 		elif type == 'tree':
 			self.image = choice(import_folder('graphics/tiles/trees')).convert_alpha()
-		elif type == 'baricade_vertical':
-			self.image = pygame.image.load('graphics/tiles/baricades/baricade_vertical.png').convert_alpha()
-		elif type == 'baricade_horizontal':
-			self.image = pygame.image.load('graphics/tiles/baricades/baricade_horizontal.png').convert_alpha()
-
 
 		# custom rect on 2-block tiles
 		self.rect = self.image.get_rect(topleft=pos)
@@ -34,27 +30,27 @@ class Tile(pygame.sprite.Sprite):
 		self.hitbox = self.rect.inflate(HITBOX_OFFSET_X[type], HITBOX_OFFSET_Y[type])
 
 class Baricade(pygame.sprite.Sprite):
-	def __init__(self, pos, groups, type, place):
+	def __init__(self, pos, groups, baricades, place):
 		super().__init__(groups)
 		# main tile
-		path = 'graphics/tiles/rock.png'
-		self.image = pygame.image.load(path).convert_alpha()
+		self.sprite_sheet = Sprite_sheet('graphics/tiles/baricades/rocks_1.png') 
+		self.image = self.sprite_sheet.get_image(0,2)
+		self.frames = [self.sprite_sheet.get_image(0,2), self.sprite_sheet.get_image(0,1), self.sprite_sheet.get_image(0,0)]
 		self.groups = groups
 		self.place = place
-
-		# diferent tiles
-		if type == 'baricade_vertical':
-			self.image = pygame.image.load('graphics/tiles/baricades/baricade_vertical.png').convert_alpha()
-		elif type == 'baricade_horizontal':
-			self.image = pygame.image.load('graphics/tiles/baricades/baricade_horizontal.png').convert_alpha()
+		self.baricades = baricades 
 
 		# making hitbox
 		self.rect = self.image.get_rect(topleft=pos)
-		self.hitbox = self.rect.inflate(HITBOX_OFFSET_X[type], HITBOX_OFFSET_Y[type])
+		self.hitbox = self.rect
+
+		self.baricades.append(self)
+
+	def add_frame(self, index):
+		self.image = self.frames[index]
 
 	def check(self, island, clear):
 		if self.place == island:
 			if clear:
+				self.baricades.remove(self)
 				self.kill()
-			#	for group in self.groups:
-			#		group.remove(self)
