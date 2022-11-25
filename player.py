@@ -225,7 +225,7 @@ class Player(pygame.sprite.Sprite):
 
 	def add_energy(self):
 		if self.energy < player_stats['energy']:
-			self.energy += 0.1
+			self.energy += 1
 
 	def cooldown(self):
 		current_time = pygame.time.get_ticks()

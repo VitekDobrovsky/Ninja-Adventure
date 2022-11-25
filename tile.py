@@ -45,12 +45,18 @@ class Baricade(pygame.sprite.Sprite):
 		self.hitbox = self.rect
 
 		self.baricades.append(self)
+		self.clear_time = None
+		self.help = True
 
 	def add_frame(self, index):
 		self.image = self.frames[index]
 
 	def check(self, island, clear):
+		if clear and self.help:
+			self.clear_time = pygame.time.get_ticks()
+			self.help = False
+
 		if self.place == island:
-			if clear:
+			if clear and pygame.time.get_ticks() - self.clear_time >= 4500:
 				self.baricades.remove(self)
 				self.kill()
