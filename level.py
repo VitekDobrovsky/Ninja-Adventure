@@ -60,7 +60,7 @@ class Level:
 				'Reptile': []
 			}
 		}
- 
+
 		self.can_give_damage = False
 
 		# enemy damage
@@ -237,11 +237,6 @@ class Level:
 			self.clear = False
 			self.baricade_time = pygame.time.get_ticks()
 
-		# removing baricades
-		for baricade in self.baricades_sprites:
-			#baricade.check(current, self.clear)
-			pass
-
 	def baricade_animations(self):
 		current = self.get_island()
 		if current == 'middle':
@@ -261,7 +256,6 @@ class Level:
 				baricade.kill()
 
 			baricade.image = baricade.frames[int(self.baricade_an_index)]
-		print(self.baricade_an_index)
 
 	# ENEMIES
 	def sort_enemy(self, x, y, type):
@@ -288,62 +282,80 @@ class Level:
 
 		# middle enemies
 		if current == 'middle':
-			for g in range(2):
-				pos = self.enemies['middle']['Bamboo'][randint(0, 3)]
+			index = 0
+			for g in range(3):
+				pos = self.enemies['middle']['Bamboo'][index]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
+				index += 1
 
+			index = 0
 			for l in range(2):
-				pos = self.enemies['middle']['Racoon'][randint(0,3)]
+				pos = self.enemies['middle']['Racoon'][index]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
+				index += 1
 				
 			self.traped1 = False
 			self.enemy_speed_index = 1
 
+
 		# top enemies
 		if current == 'top':
+			index = 0
 			for a in range(2):
-				pos = self.enemies['top']['Racoon'][randint(0, 3)]
+				pos = self.enemies['top']['Racoon'][index]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
+				index += 1
 
-			for b in range(2):
-				pos = self.enemies['top']['Spirit_fire'][randint(0,3)]
+			index = 0
+			for b in range(3):
+				pos = self.enemies['top']['Spirit_fire'][index]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Spirit_fire', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
+				index += 1
 
 			self.traped2 = False
 			self.enemy_speed_index = 1
 
 		# left enemies
 		if current == 'left':
+			index = 0
 			for c in range(2):
-				pos = self.enemies['left']['Racoon'][randint(0, 3)]
+				pos = self.enemies['left']['Racoon'][index]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
 				self.enemy_speed_index = 1
+				index += 1
 
-			for d in range(2):
-				pos = self.enemies['left']['Reptile'][randint(0,3)]
+			index = 0
+			for d in range(3):
+				pos = self.enemies['left']['Reptile'][index]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
+				index += 1
 
 			self.traped3 = False
 			self.enemy_speed_index = 1
 
 		# right enemies
 		if current == 'right':
+			index = 0
 			for e in range(2):
-				pos = self.enemies['right']['Bamboo'][randint(0, 3)]
+				pos = self.enemies['right']['Bamboo'][index]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
+				index += 1
 
-			for f in range(2):
-				pos = self.enemies['right']['Reptile'][randint(0,3)]
+			index = 0
+			for f in range(3):
+				pos = self.enemies['right']['Reptile'][index]
 				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player, self.enemy_speed_index)
 				self.enemy_speed_index += 0.5
+				index += 1 
 
+			index = 0
 			self.traped4 = False
 			self.enemy_speed_index = 1
 
@@ -386,9 +398,7 @@ class Level:
 
 					# subtract health
 					enemy.health -= self.player.weapon.damage
-					if enemy.health <= 0:
-						enemy.kill()
-						self.enemy_count -= 1
+
 			else:
 				enemy.image.set_alpha(255)	
 
@@ -408,6 +418,12 @@ class Level:
 				enemy.direction.y = distance
 			elif self.player.direction.y < 0:
 				enemy.direction.y = -distance
+
+	def kill_enemy(self):
+		for enemy in self.enemy:
+			if enemy.health <= 0:
+				enemy.kill()
+				self.enemy_count -= 1
 
 	# PLAYER
 	def heal_after_win(self):
@@ -498,6 +514,7 @@ class Level:
 		self.clear_island()
 		self.enemy_move()
 		self.damage_enemy()
+		self.kill_enemy()
 		self.damage_player()
 		self.heal_after_win()
 		self.baricade_animations()

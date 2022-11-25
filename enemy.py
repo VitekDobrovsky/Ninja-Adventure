@@ -16,6 +16,7 @@ class Enemy(pygame.sprite.Sprite):
 		self.image = idle
 		self.rect = self.image.get_rect(topleft=pos)
 		self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET_Y['enemy'])
+		self.type = type
 
 		# groups
 		self.obstacle_sprites = obstacle_sprites
