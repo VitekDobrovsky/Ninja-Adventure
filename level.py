@@ -71,12 +71,12 @@ class Level:
 		self.enemy_count = 0
 
 		# 'CLEAR' text
-		self.text1 = Text(self.screen, 'CLEAR', 'graphics/fonts/game.ttf', 100, (WIDTH/2, HEIGHT/3), 'black'), Text(self.screen, 'clear', 'graphics/fonts/game.ttf', 120, (WIDTH/2, HEIGHT/3), 'orange')
-		self.c = Text(self.screen, 'C', 'graphics/fonts/game.ttf', 80, (WIDTH/2 - 138, HEIGHT/3), 'orange')
-		self.l = Text(self.screen, 'L', 'graphics/fonts/game.ttf', 80, (WIDTH/2 - 69, HEIGHT/3), 'orange')
-		self.e = Text(self.screen, 'E', 'graphics/fonts/game.ttf', 80, (WIDTH/2, HEIGHT/3), 'orange')
-		self.a = Text(self.screen, 'A', 'graphics/fonts/game.ttf', 80, (WIDTH/2 + 68, HEIGHT/3), 'orange')
-		self.r = Text(self.screen, 'R', 'graphics/fonts/game.ttf', 80, (WIDTH/2 + 136, HEIGHT/3), 'orange')			
+		self.text1 = Text(self.screen, 'CLEAR', 'graphics/fonts/game.ttf', 100, (WIDTH/2, HEIGHT/3), 'black'), Text(self.screen, 'clear', 'graphics/fonts/game.ttf', 120, (WIDTH/2, HEIGHT/3), RED_TEXT)
+		self.c = Text(self.screen, 'C', 'graphics/fonts/game.ttf', 80, (WIDTH/2 - 138, HEIGHT/3), RED_TEXT)
+		self.l = Text(self.screen, 'L', 'graphics/fonts/game.ttf', 80, (WIDTH/2 - 69, HEIGHT/3), RED_TEXT)
+		self.e = Text(self.screen, 'E', 'graphics/fonts/game.ttf', 80, (WIDTH/2, HEIGHT/3), RED_TEXT)
+		self.a = Text(self.screen, 'A', 'graphics/fonts/game.ttf', 80, (WIDTH/2 + 68, HEIGHT/3), RED_TEXT)
+		self.r = Text(self.screen, 'R', 'graphics/fonts/game.ttf', 80, (WIDTH/2 + 136, HEIGHT/3), RED_TEXT)			
 		
 		self.text1[0].text_surf.set_alpha(0)
 		self.text1[1].text_surf.set_alpha(0)
@@ -324,7 +324,7 @@ class Level:
 		elif current == 'top' and not self.traped2:
 			# top baricades
 			index = 0
-			for i in self.baricades['top']:
+			for i in self.baricades['up']:
 				Baricade(self.baricades['up'][index], [self.visible_sprites, self.obstacle_sprites], self.baricades_sprites, 'top')
 				index += 1
 			
@@ -437,11 +437,11 @@ class Level:
 		self.e.draw()
 		self.a.draw()
 		self.r.draw()
-		draw_surface(self.screen, WIDTH/2 - 159,HEIGHT/3 - 20 ,35,60, 'orange', self.al)
-		draw_surface(self.screen, WIDTH/2 - 80,HEIGHT/3 + 10 ,40,10, 'orange', self.al)
-		draw_surface(self.screen, WIDTH/2 - 20 ,HEIGHT/3 - 20,35,60, 'orange', self.al)
-		draw_surface(self.screen, WIDTH/2 + 50,HEIGHT/3 - 20,30,60, 'orange', self.al)
-		draw_surface(self.screen, WIDTH/2 + 110,HEIGHT/3 - 30,40,55, 'orange', self.al)
+		draw_surface(self.screen, WIDTH/2 - 159,HEIGHT/3 - 20 ,35,60, RED_TEXT, self.al)
+		draw_surface(self.screen, WIDTH/2 - 80,HEIGHT/3 + 10 ,40,10, RED_TEXT, self.al)
+		draw_surface(self.screen, WIDTH/2 - 20 ,HEIGHT/3 - 20,35,60, RED_TEXT, self.al)
+		draw_surface(self.screen, WIDTH/2 + 50,HEIGHT/3 - 20,30,60, RED_TEXT, self.al)
+		draw_surface(self.screen, WIDTH/2 + 110,HEIGHT/3 - 30,40,55, RED_TEXT, self.al)
 		self.text1[1].draw()
 		self.text1[0].draw()
 
@@ -464,13 +464,23 @@ class Level:
 			self.clear = True
 
 	def baricade_animations(self):
-		if self.baricade_animation:
-			for baricade in self.baricades_sprites:
-				
-				if self.baricade_an_index <= 2.9:
-					self.baricade_an_index += 0.005
+		current = self.get_island()
+		if current == 'middle':
+			index = 0.005
+		else:
+			index = 0.025
 
-				baricade.image = baricade.frames[int(self.baricade_an_index)]
+		for baricade in self.baricades_sprites:
+				
+			if self.baricade_an_index <= 3.9:
+				self.baricade_an_index += index
+
+			baricade.image = baricade.frames[int(self.baricade_an_index)]
+
+		if self.clear:
+			self.baricade_an_index = 0
+
+		print(self.baricade_an_index, self.clear, self.baricade_animation)
 
 
 	def cooldown(self):
@@ -479,10 +489,6 @@ class Level:
 		if not self.can_enemy_damage:
 			if current_time - self.enemy_damage_time >= self.enemy_damage_cooldown:
 				self.can_enemy_damage = True
-
-		if self.baricade_animation:
-			if current_time - self.baricade_time >= 1000:
-				self.baricade_animation = False
 
 	def run(self):
 		self.visible_sprites.custom_draw(self.player)

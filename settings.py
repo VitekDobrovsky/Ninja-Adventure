@@ -13,6 +13,9 @@ TILESIZE = 64
 BAR_HEIGHT = 20
 FRAME_BAR_HEIGHT = 20
 
+# COLOR
+RED_TEXT = '#FF3939'
+
 # player stats
 player_stats = {
 	'speed': 7,
