@@ -4,7 +4,7 @@ from tile import Tile
 from tile import Baricade
 from player import Player
 from support import *
-from enemy import Enemy
+from enemy import Enemy, Dead_enemy
 from random import randint
 from math import sin
 from gui import GUI 
@@ -60,7 +60,12 @@ class Level:
 				'Reptile': []
 			}
 		}
-
+		self.dead_enemies = { 
+			'Racoon': [],
+			'Bamboo': [],
+			'Spirit_fire': [],
+			'Reptile': []
+		}
 		self.can_give_damage = False
 
 		# enemy damage
@@ -239,10 +244,7 @@ class Level:
 
 	def baricade_animations(self):
 		current = self.get_island()
-		if current == 'middle':
-			index = 0.005
-		else:
-			index = 0.0025
+		index = 0.005
 
 		for baricade in self.baricades_sprites:
 				
@@ -420,10 +422,20 @@ class Level:
 				enemy.direction.y = -distance
 
 	def kill_enemy(self):
+		# kill enemy
 		for enemy in self.enemy:
 			if enemy.health <= 0:
+				self.dead_enemies[enemy.type].append((enemy.hitbox.x,enemy.hitbox.y))
+				Dead_enemy((enemy.hitbox.x, enemy.hitbox.y), [self.visible_sprites], enemy.type)
 				enemy.kill()
 				self.enemy_count -= 1
+
+		# kill all on R
+		keys = pygame.key.get_pressed()
+		if keys[pygame.K_r]:
+			self.enemy_count = 0
+			for enemy in self.enemy:
+				enemy.kill()
 
 	# PLAYER
 	def heal_after_win(self):

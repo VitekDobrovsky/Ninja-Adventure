@@ -112,3 +112,10 @@ class Enemy(pygame.sprite.Sprite):
 		self.get_status()
 		self.animate()
 
+
+class Dead_enemy(pygame.sprite.Sprite):
+	def __init__(self, pos, groups, type):
+		super().__init__(groups)
+		path = 'graphics/monsters/dead/' + type + '.png'
+		self.image = pygame.transform.scale(pygame.image.load(path), (64, 64))
+		self.rect = self.image.get_rect(topleft=pos)
