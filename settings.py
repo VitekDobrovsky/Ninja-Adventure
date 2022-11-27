@@ -14,7 +14,7 @@ BAR_HEIGHT = 20
 FRAME_BAR_HEIGHT = 20
 
 # COLOR
-RED_TEXT = '#FF3939'
+RED_TEXT = '#FFD700'
 
 # player stats
 player_stats = {
@@ -29,6 +29,13 @@ ENEMY_HEALTH = {
 	'Racoon': 90,
 	'Reptile': 120,
 	'Spirit_fire': 60
+}
+
+ENEMY_DAMAGE = {
+	'Bamboo': 10,
+	'Racoon': 15,
+	'Reptile': 20,
+	'Spirit_fire': 5
 }
 
 

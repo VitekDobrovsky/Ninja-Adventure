@@ -445,7 +445,7 @@ class Level:
 	def damage_player(self):
 		for enemy in self.enemy.sprites():
 			if enemy.can_attack and self.player.vulnerable and enemy.direction == (0,0):
-				self.player.health -= 10
+				self.player.health -= ENEMY_DAMAGE[enemy.type]
 				self.player.vulnerable = False
 				self.player.damage_time = pygame.time.get_ticks()
 

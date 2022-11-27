@@ -36,11 +36,12 @@ if __name__ == '__main__':
 
 '''
 TODO:
-	3. get damages
-	4. minus energy
-	5. better stats bars
-	6. baricade animation
-	7. blickering after damage to enemy
-	8. enemy dead animation
-	8. aim assist
+	better stats bars
+	minimap
+	more weapons
+	weapon gui
+	aim assist
+	boss
+	convert all to sprite sheets
+	change size of gui
 '''
