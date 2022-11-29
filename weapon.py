@@ -1,7 +1,7 @@
 import pygame
 
 class Weapon(pygame.sprite.Sprite):
-	def __init__(self, player_rect, player_status, visible_sprites):
+	def __init__(self, player_rect, player_status, visible_sprites, type):
 		super().__init__()
 		# init
 		self.status = player_status
@@ -11,7 +11,7 @@ class Weapon(pygame.sprite.Sprite):
 		self.damage = 30
 
 		# define image and rect
-		self.image = pygame.transform.scale(pygame.image.load('graphics/weapons/sword.png').convert_alpha(), (22,40))
+		self.image = pygame.transform.scale(pygame.image.load('graphics/weapons/' + type + '.png').convert_alpha(), (22,40))
 		self.down = self.image
 		self.up = pygame.transform.rotate(self.image, 180)
 		self.right = pygame.transform.rotate(self.image, 90)

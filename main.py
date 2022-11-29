@@ -13,7 +13,7 @@ class NinjaAdventure:
 		self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 		self.clock = pygame.time.Clock()  
 		self.level = Level()
-
+  
 	def run(self):
 		# main loop
 		while True:
@@ -43,5 +43,11 @@ TODO:
 	aim assist
 	boss
 	convert all to sprite sheets
+	damage animation
 	change size of gui
+	optimate clear text
+	clean up level
+	animate more things
 '''
+# BUGS:
+# not switching weapons properly

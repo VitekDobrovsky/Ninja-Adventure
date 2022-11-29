@@ -68,7 +68,13 @@ class Player(pygame.sprite.Sprite):
 		self.attack = False
 
 		# weapon
-		self.weapon = Weapon(self.rect, self.status, self.visible_sprites)
+		self.sword = Weapon(self.rect, self.status, self.visible_sprites, 'sword')
+		self.lance = Weapon(self.rect, self.status, self.visible_sprites, 'lance')
+		self.weapon = [self.sword, self.lance]
+		self.weapon_index = 0
+		self.can_change_weapon = True
+		self.change_weapon_cooldown = 200
+		self.change_weapon_time = None
 		self.is_weapon = False
 
 		# charge
@@ -118,6 +124,16 @@ class Player(pygame.sprite.Sprite):
 			# stop after charge
 			self.stop = True 
 			self.stop_time = pygame.time.get_ticks()
+
+		if keys[pygame.K_r] and self.can_change_weapon:
+			if self.weapon_index < 1:
+				self.weapon_index += 1
+			else:
+				self.weapon_index = 0
+
+			self.change_weapon_time = pygame.time.get_ticks()
+			self.can_change_weapon = False
+			print(1)
 
 	def move(self):
 		# normalize direction
@@ -215,12 +231,12 @@ class Player(pygame.sprite.Sprite):
 	def draw_weapon(self):
 		# draw weapon
 		if self.charge or self.stop:
-			self.weapon.status = self.status
-			self.weapon.player_rect = self.rect
-			self.weapon.show()
+			self.weapon[self.weapon_index].status = self.status
+			self.weapon[self.weapon_index].player_rect = self.rect
+			self.weapon[self.weapon_index].show()
 			self.is_weapon = True
 		else:
-			self.weapon.kill()
+			self.weapon[self.weapon_index].kill()
 			self.is_weapon = False
 
 	def add_energy(self):
@@ -250,6 +266,11 @@ class Player(pygame.sprite.Sprite):
 		if not self.vulnerable:
 			if current_time - self.damage_time >= self.damage_cooldown:
 				self.vulnerable = True
+
+		# change weapon cooldown
+		if not self.can_change_weapon:
+			if current_time - self.change_weapon_time >= self.change_weapon_cooldown:
+				self.can_change_weapon = True
 
 	def update(self):
 		self.cooldown()

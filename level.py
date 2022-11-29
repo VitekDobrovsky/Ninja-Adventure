@@ -385,7 +385,7 @@ class Level:
 
 	def damage_enemy(self):
 		for enemy in self.enemy.sprites():
-			if self.player.weapon.rect.colliderect(enemy) and self.player.is_weapon:
+			if self.player.weapon[self.player.weapon_index].rect.colliderect(enemy) and self.player.is_weapon:
 				# push enemy
 				self.push_enemy(enemy)
 				
@@ -399,7 +399,7 @@ class Level:
 					self.can_enemy_damage = False
 
 					# subtract health
-					enemy.health -= self.player.weapon.damage
+					enemy.health -= self.player.weapon[self.player.weapon_index].damage
 
 			else:
 				enemy.image.set_alpha(255)	
@@ -432,7 +432,7 @@ class Level:
 
 		# kill all on R
 		keys = pygame.key.get_pressed()
-		if keys[pygame.K_r]:
+		if keys[pygame.K_g]:
 			self.enemy_count = 0
 			for enemy in self.enemy:
 				enemy.kill()
