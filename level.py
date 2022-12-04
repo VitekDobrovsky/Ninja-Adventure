@@ -449,7 +449,21 @@ class Level:
 				self.player.vulnerable = False
 				self.player.damage_time = pygame.time.get_ticks()
 
+	def draw_gui(self):
+		if self.show_map:
+			self.gui.map()
+		else:
+			self.gui.display_stats()
+
 	# SUPPORT
+	def input(self):
+		keys = pygame.key.get_pressed()
+
+		if keys[pygame.K_m]:
+			self.show_map = True
+		else:
+			self.show_map = False
+
 	def is_middle(self, x, y):
 		if y < 2204 and y > 924:
 			if x < 3388 and x > 1608:
@@ -523,6 +537,7 @@ class Level:
 	def run(self):
 		self.visible_sprites.custom_draw(self.player)
 		self.visible_sprites.update()
+		self.input()
 		self.clear_island()
 		self.enemy_move()
 		self.damage_enemy()
@@ -531,7 +546,7 @@ class Level:
 		self.heal_after_win()
 		self.baricade_animations()
 		self.trap_in_level()
-		self.gui.draw()
+		self.draw_gui()
 		self.clear_text()
 		self.cooldown()
 

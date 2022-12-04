@@ -15,6 +15,7 @@ FRAME_BAR_HEIGHT = 20
 
 # COLOR
 RED_TEXT = '#FFD700'
+GUI_COLOR = '#FFD700'
 
 # player stats
 player_stats = {

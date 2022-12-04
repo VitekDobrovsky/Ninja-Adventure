@@ -48,6 +48,5 @@ TODO:
 	optimate clear text
 	clean up level
 	animate more things
+
 '''
-# BUGS:
-# not switching weapons properly

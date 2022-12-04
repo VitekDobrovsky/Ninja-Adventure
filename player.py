@@ -133,7 +133,7 @@ class Player(pygame.sprite.Sprite):
 
 			self.change_weapon_time = pygame.time.get_ticks()
 			self.can_change_weapon = False
-			print(1)
+
 
 	def move(self):
 		# normalize direction

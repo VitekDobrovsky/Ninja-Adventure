@@ -18,6 +18,16 @@ class GUI:
 		self.ring_image = pygame.transform.scale(self.ring_image, (156 * 0.71, 157 * 0.71))
 		self.ring_rect = self.ring_image.get_rect(center= (60,60))
 
+		# map
+		self.map_image = pygame.image.load('graphics/GUI/map.png').convert_alpha()
+		self.map_image = pygame.transform.scale(self.map_image, (WIDTH * 0.5, WIDTH * 0.5))
+		self.map_rect = self.map_image.get_rect(center= (WIDTH * 0.5 , HEIGHT * 0.5))
+
+		# frame
+		self.frame_image = pygame.image.load('graphics/GUI/frame.png').convert_alpha()
+		self.frame_image = pygame.transform.scale(self.frame_image, (WIDTH * 0.5 + 50, WIDTH * 0.5 + 40))
+		self.frame_rect = self.frame_image.get_rect(center= (WIDTH * 0.5 , HEIGHT * 0.5 ))
+
 	def health_bar(self):
 		# draw health bar
 		draw_rect(self.screen,95,20, 300, BAR_HEIGHT, (133, 106, 106))
@@ -34,5 +44,8 @@ class GUI:
 		self.screen.blit(self.faceset_image, self.faceset_rect)
 		self.screen.blit(self.ring_image, self.ring_rect)
 
-	def draw(self):
-		self.display_stats()
+	def map(self):
+		#draw_rect(self.screen, self.map_rect.x - 20, self.map_rect.y - 20, WIDTH * 0.5 + 40, WIDTH * 0.5 + 40, GUI_COLOR)
+		self.screen.blit(self.map_image, self.map_rect)
+		self.screen.blit(self.frame_image, self.frame_rect)
+		
