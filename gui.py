@@ -30,19 +30,21 @@ class GUI:
 
 	def health_bar(self):
 		# draw health bar
-		draw_rect(self.screen,95,20, 300, BAR_HEIGHT, (133, 106, 106))
-		draw_rect(self.screen,95,20, self.player.health, BAR_HEIGHT, (255,0,0))
+		draw_rect(self.screen,7,7, 306, BAR_HEIGHT + 6, '#FDD503')
+		draw_rect(self.screen,10,10, 300, BAR_HEIGHT, (133, 106, 106))
+		draw_rect(self.screen,10,10, self.player.health, BAR_HEIGHT, (255,0,0))
 		
 	def energy_bar(self):
 		# draw energy bar
-		draw_rect(self.screen,110,46, 150, BAR_HEIGHT, (114,106,133))
-		draw_rect(self.screen,110,46, self.player.energy, BAR_HEIGHT, (0,0,225))
+		draw_rect(self.screen,7,37, 156, BAR_HEIGHT + 6, '#C0C0C0')
+		draw_rect(self.screen,10,40, 150, BAR_HEIGHT, (114,106,133))
+		draw_rect(self.screen,10,40, self.player.energy, BAR_HEIGHT, (0,0,225))
 
 	def display_stats(self):
 		self.health_bar()
 		self.energy_bar()
-		self.screen.blit(self.faceset_image, self.faceset_rect)
-		self.screen.blit(self.ring_image, self.ring_rect)
+		#self.screen.blit(self.faceset_image, self.faceset_rect)
+		#self.screen.blit(self.ring_image, self.ring_rect)
 
 	def map(self):
 		#draw_rect(self.screen, self.map_rect.x - 20, self.map_rect.y - 20, WIDTH * 0.5 + 40, WIDTH * 0.5 + 40, GUI_COLOR)

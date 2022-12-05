@@ -46,6 +46,7 @@ TODO:
 	damage animation
 	change size of gui
 	optimate clear text
+	optimization of gameplay
 	clean up level
 	animate more things
 
