@@ -6,8 +6,8 @@ from player import Player
 from support import *
 from enemy import Enemy, Dead_enemy
 from random import randint
-from math import sin
-from gui import GUI 
+from gui import GUI
+from chest import Chest 
 
 
 class Level:
@@ -19,6 +19,7 @@ class Level:
 		self.visible_sprites = Camera()
 		self.obstacle_sprites = pygame.sprite.Group()
 		self.enemy = pygame.sprite.Group()
+		self.chests_group = pygame.sprite.Group()
 
 		# trap on isand
 		self.baricades = {
@@ -66,12 +67,8 @@ class Level:
 			'Spirit_fire': [],
 			'Reptile': []
 		}
-		self.can_give_damage = False
 
 		# enemy damage
-		self.can_enemy_damage = True
-		self.enemy_damage_time = None
-		self.enemy_damage_cooldown = 500
 		self.enemy_count = 0
 
 		# 'CLEAR' text
@@ -93,6 +90,14 @@ class Level:
 		self.al = 0
 		self.clear_tm = 0
 
+		# chests
+		self.chests = {
+			'middle' : None,
+			'left': None,
+			'right': None,
+			'top': None
+		} 
+
 		# create map
 		self.layouts = {
 			'entities': import_csv_layout('graphics/levels/level_1/CSV_files/1_entities.csv'),
@@ -104,6 +109,7 @@ class Level:
 			'baricades': import_csv_layout('graphics/levels/level_1/CSV_files/1_baricade.csv'),			
 			'grass': import_csv_layout('graphics/levels/level_1/CSV_files/1_grass.csv'),
 			'trees': import_csv_layout('graphics/levels/level_1/CSV_files/1_tree.csv'),
+			'chests': import_csv_layout('graphics/levels/level_1/CSV_files/1_chest.csv')
 			}
 
 		self.create_map()	
@@ -159,7 +165,20 @@ class Level:
 							if col == '0' or col == '1':
 								Tile((x,y), [self.visible_sprites, self.obstacle_sprites], 'stubbe')
 							else:
-								Tile((x,y), [self.visible_sprites, self.obstacle_sprites], 'tree')	
+								Tile((x,y), [self.visible_sprites, self.obstacle_sprites], 'tree')
+						elif style == 'chests':
+							if col == '0':
+								# middle
+								self.chests['middle'] = (x,y)
+							elif col == '1':
+								# right
+								self.chests['right'] = (x,y)
+							elif col == '2':
+								# left
+								self.chests['left'] = (x,y)
+							elif col == '3':
+								# top
+								self.chests['top'] = (x,y)
 
 	def get_island(self):
 		current = 'start'
@@ -258,6 +277,14 @@ class Level:
 				baricade.kill()
 
 			baricade.image = baricade.frames[int(self.baricade_an_index)]
+
+	def create_chests(self):
+		current = self.get_island()
+
+		if self.clear_tm == 1 and current != 'start':
+			pos = self.chests[current]
+			Chest(pos,[self.visible_sprites, self.obstacle_sprites, self.chests_group], self.player)
+
 
 	# ENEMIES
 	def sort_enemy(self, x, y, type):
@@ -361,66 +388,6 @@ class Level:
 			self.traped4 = False
 			self.enemy_speed_index = 1
 
-	def enemy_move(self):
-		for enemy in self.enemy.sprites():
-			if self.player.hitbox.x + 64 < enemy.hitbox.x:
-				enemy.direction.x = -1
-				enemy.can_attack = False
-			elif self.player.hitbox.x - 64 > enemy.hitbox.x:
-				enemy.direction.x = 1
-				enemy.can_attack = False
-			else:
-				enemy.direction.x = 0
-				enemy.can_attack = True
-
-			if self.player.hitbox.y + 64 < enemy.hitbox.y:
-				enemy.direction.y = -1
-				enemy.can_attack = False
-			elif self.player.hitbox.y - 64 > enemy.hitbox.y:
-				enemy.direction.y = 1
-				enemy.can_attack = False
-			else:
-				enemy.direction.y = 0
-				enemy.can_attack = True
-
-	def damage_enemy(self):
-		for enemy in self.enemy.sprites():
-			if self.player.weapon[self.player.weapon_index].rect.colliderect(enemy) and self.player.is_weapon:
-				# push enemy
-				self.push_enemy(enemy)
-				
-				# animation
-				alpha = self.wave_value()
-				enemy.image.set_alpha(alpha)
-
-				if self.can_enemy_damage:
-					# cooldown
-					self.enemy_damage_time = pygame.time.get_ticks()
-					self.can_enemy_damage = False
-
-					# subtract health
-					enemy.health -= self.player.weapon[self.player.weapon_index].damage
-
-			else:
-				enemy.image.set_alpha(255)	
-
-	def push_enemy(self, enemy):
-		# knockback distance
-		distance = 20
-
-		if self.player.charge:
-			# x
-			if self.player.direction.x > 0:
-				enemy.direction.x = distance
-			elif self.player.direction.x < 0:
-				enemy.direction.x = -distance
-
-			# y
-			if self.player.direction.y > 0:
-				enemy.direction.y = distance
-			elif self.player.direction.y < 0:
-				enemy.direction.y = -distance
-
 	def kill_enemy(self):
 		# kill enemy
 		for enemy in self.enemy:
@@ -430,12 +397,10 @@ class Level:
 				enemy.kill()
 				self.enemy_count -= 1
 
-		# kill all on R
-		keys = pygame.key.get_pressed()
-		if keys[pygame.K_g]:
-			self.enemy_count = 0
-			for enemy in self.enemy:
-				enemy.kill()
+	def kill_all(self):
+		self.enemy_count = 0
+		for enemy in self.enemy:
+			enemy.kill()
 
 	# PLAYER
 	def heal_after_win(self):
@@ -459,10 +424,15 @@ class Level:
 	def input(self):
 		keys = pygame.key.get_pressed()
 
+		# show map
 		if keys[pygame.K_m]:
 			self.show_map = True
 		else:
 			self.show_map = False
+
+		# kill all on G
+		if keys[pygame.K_g]:
+			self.kill_all()
 
 	def is_middle(self, x, y):
 		if y < 2204 and y > 924:
@@ -480,16 +450,6 @@ class Level:
 	def is_top(self, y):
 		if y < 924:
 			return True
-
-	def wave_value(self):
-		# sin value
-		value = sin(pygame.time.get_ticks())
-
-		# choose
-		if value > 0:
-			return 225
-		else:
-			return 0
 
 	def clear_text(self):
 		if self.al >= 0:
@@ -525,13 +485,6 @@ class Level:
 	def clear_island(self):
 		if self.enemy_count == 0:
 			self.clear = True
-	
-	def cooldown(self):
-		current_time = pygame.time.get_ticks()
-
-		if not self.can_enemy_damage:
-			if current_time - self.enemy_damage_time >= self.enemy_damage_cooldown:
-				self.can_enemy_damage = True
 
 	# RUN
 	def run(self):
@@ -539,16 +492,15 @@ class Level:
 		self.visible_sprites.update()
 		self.input()
 		self.clear_island()
-		self.enemy_move()
-		self.damage_enemy()
 		self.kill_enemy()
 		self.damage_player()
 		self.heal_after_win()
 		self.baricade_animations()
+		self.create_chests()
+		self.chests_group.update()
 		self.trap_in_level()
 		self.draw_gui()
 		self.clear_text()
-		self.cooldown()
 
 class Camera(pygame.sprite.Group):
 	def __init__(self):

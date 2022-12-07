@@ -26,6 +26,11 @@ class Enemy(pygame.sprite.Sprite):
 		self.direction = pygame.math.Vector2()
 		self.speed = speed
 
+		# get damage
+		self.can_enemy_damage = True
+		self.enemy_damage_time = None
+		self.enemy_damage_cooldown = 500
+
 		# animate
 		self.status = 'idle'
 		self.frame_index = 0
@@ -61,6 +66,27 @@ class Enemy(pygame.sprite.Sprite):
 
 		# matching hitbox
 		self.rect.center = self.hitbox.center
+
+	def set_direction(self):
+		if self.player.hitbox.x + 64 < self.hitbox.x:
+			self.direction.x = -1
+			self.can_attack = False
+		elif self.player.hitbox.x - 64 > self.hitbox.x:
+			self.direction.x = 1
+			self.can_attack = False
+		else:
+			self.direction.x = 0
+			self.can_attack = True
+		
+		if self.player.hitbox.y + 64 < self.hitbox.y:
+			self.direction.y = -1
+			self.can_attack = False
+		elif self.player.hitbox.y - 64 > self.hitbox.y:
+			self.direction.y = 1
+			self.can_attack = False
+		else:
+			self.direction.y = 0
+			self.can_attack = True
 
 	def get_status(self):
 		# getting y status
@@ -107,10 +133,45 @@ class Enemy(pygame.sprite.Sprite):
 					if self.direction.y < 0:
 						self.hitbox.top = sprite.hitbox.bottom
 
+	def get_damage(self):
+		if self.player.weapon[self.player.weapon_index].rect.colliderect(self) and self.player.is_weapon:
+			# push enemy
+			distance = 30
+			if self.player.charge:
+				# x
+				if self.player.direction.x > 0:
+					self.direction.x = distance
+				elif self.player.direction.x < 0:
+					self.direction.x = -distance
+
+				# y
+				if self.player.direction.y > 0:
+					self.direction.y = distance
+				elif self.player.direction.y < 0:
+					self.direction.y = -distance
+
+			if self.can_enemy_damage:
+					# cooldown
+					self.enemy_damage_time = pygame.time.get_ticks()
+					self.can_enemy_damage = False
+
+					# subtract health
+					self.health -= self.player.weapon[self.player.weapon_index].damage
+
+	def cooldown(self):
+		current_time = pygame.time.get_ticks()
+
+		if not self.can_enemy_damage:
+			if current_time - self.enemy_damage_time >= self.enemy_damage_cooldown:
+				self.can_enemy_damage = True
+
 	def update(self):
 		self.move()
+		self.set_direction()
+		self.get_damage()
 		self.get_status()
 		self.animate()
+		self.cooldown()
 
 
 class Dead_enemy(pygame.sprite.Sprite):

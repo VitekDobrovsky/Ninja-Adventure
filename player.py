@@ -105,15 +105,15 @@ class Player(pygame.sprite.Sprite):
 		else:
 			self.direction.x = 0
 
-		if keys[pygame.K_SPACE] and self.can_attack and self.energy >= 10:
+		if keys[pygame.K_SPACE] and self.can_attack and self.energy >= 5:
 			# attack cooldown
 			self.attack = True
 			self.attack_time = pygame.time.get_ticks()
 			self.can_attack = False
 
 		# subtract player energy
-			if self.energy > 0:
-				self.energy -= 15
+			if self.energy > 1:
+				self.energy -= 5
 			else:
 				self.energy = 0
 
@@ -241,7 +241,7 @@ class Player(pygame.sprite.Sprite):
 
 	def add_energy(self):
 		if self.energy < player_stats['energy']:
-			self.energy += 1
+			self.energy += 0.02
 
 	def cooldown(self):
 		current_time = pygame.time.get_ticks()

@@ -39,12 +39,15 @@ TODO:
 	better stats bars
 	minimap
 	more weapons
+	chests
+	better gui - shadow background with low opacity
 	weapon gui
 	aim assist
 	boss
 	convert all to sprite sheets
 	damage animation
 	change size of gui
+	no energy text
 	optimate clear text
 	optimization of gameplay
 	clean up level

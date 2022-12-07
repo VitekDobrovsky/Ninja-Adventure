@@ -1,6 +1,7 @@
 import pygame
 from os import walk
 from csv import reader
+from math import sin
 
 # get multiple images from folder
 def  import_folder(path):

@@ -33,9 +33,9 @@ ENEMY_HEALTH = {
 }
 
 ENEMY_DAMAGE = {
-	'Bamboo': 10,
-	'Racoon': 15,
-	'Reptile': 20,
+	'Bamboo': 5,
+	'Racoon': 10,
+	'Reptile': 15,
 	'Spirit_fire': 5
 }
 
@@ -53,7 +53,8 @@ HITBOX_OFFSET_Y = {
 	'border_horizontal': 90,
 	'border_banister': -63,
 	'baricade_vertical': 0,
-	'baricade_horizontal': 0
+	'baricade_horizontal': 0,
+	'chest': -50
 }
 HITBOX_OFFSET_X = {
 	'player': 0,
