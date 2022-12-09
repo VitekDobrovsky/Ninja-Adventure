@@ -20,8 +20,8 @@ GUI_COLOR = '#FFD700'
 # player stats
 player_stats = {
 	'speed': 7,
-	'health': 300,
-	'energy': 150
+	'health': 100,
+	'energy': 100
 }
 
 # enemies

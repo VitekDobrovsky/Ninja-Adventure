@@ -31,27 +31,29 @@ class GUI:
 		# heart
 		self.heart_image = pygame.image.load('graphics/GUI/heart.png').convert_alpha()
 		self.heart_image = pygame.transform.scale(self.heart_image, (BAR_HEIGHT + 8, BAR_HEIGHT + 8))
+		self.heart_image.set_colorkey((20, 27, 27))
 		self.hear_rect = self.heart_image.get_rect(topleft = (5, 5))
 
 		# energy symbol
 		self.energy_image = pygame.image.load('graphics/GUI/energy.png').convert_alpha()
-		self.energy_image = pygame.transform.scale(self.energy_image, (BAR_HEIGHT + 5, BAR_HEIGHT + 5))
+		self.energy_image = pygame.transform.scale(self.energy_image, (BAR_HEIGHT + 7, BAR_HEIGHT + 7))
+		self.energy_image.set_colorkey((20, 27, 27))
 		self.energy_rect = self.energy_image.get_rect(topleft = (5, 38))
 
 	def health_bar(self):
 		# draw health bar
 		draw_rect(self.screen,37,7, 306, BAR_HEIGHT + 6, '#FDD503')
 		draw_rect(self.screen,40,10, 300, BAR_HEIGHT, (133, 106, 106))
-		draw_rect(self.screen,40,10, self.player.health , BAR_HEIGHT, (255,0,0))
+		draw_rect(self.screen,40,10, self.player.health * 3 , BAR_HEIGHT, (255,0,0))
 
-		Text(self.screen, f'{round(self.player.health / 3)}/100', 'graphics/fonts/Gameplay.ttf', 15, (160, 20), 'white').draw()
+		Text(self.screen, f'{round(self.player.health)}/100', 'graphics/fonts/Gameplay.ttf', 15, (160, 20), 'white').draw()
 		self.screen.blit(self.heart_image, self.hear_rect)
 		
 	def energy_bar(self):
 		# draw energy bar
 		draw_rect(self.screen,37,37, 156, BAR_HEIGHT + 6, '#A4A7A8')
 		draw_rect(self.screen,40,40, 150, BAR_HEIGHT, (114,106,133))
-		draw_rect(self.screen,40,40, self.player.energy, BAR_HEIGHT, (0,0,225))
+		draw_rect(self.screen,40,40, self.player.energy * 1.5, BAR_HEIGHT, (0,0,225))
 
 		self.screen.blit(self.energy_image, self.energy_rect)
 

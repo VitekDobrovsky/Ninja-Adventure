@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
 '''
 TODO:
-	better stats bars
+	add coins
 	minimap
 	more weapons
 	chests

@@ -403,10 +403,6 @@ class Level:
 			enemy.kill()
 
 	# PLAYER
-	def heal_after_win(self):
-		if self.clear_tm == 1:
-			self.player.health += 100
-
 	def damage_player(self):
 		for enemy in self.enemy.sprites():
 			if enemy.can_attack and self.player.vulnerable and enemy.direction == (0,0):
@@ -494,7 +490,6 @@ class Level:
 		self.clear_island()
 		self.kill_enemy()
 		self.damage_player()
-		self.heal_after_win()
 		self.baricade_animations()
 		self.create_chests()
 		self.chests_group.update()

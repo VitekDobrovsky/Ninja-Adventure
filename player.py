@@ -189,6 +189,10 @@ class Player(pygame.sprite.Sprite):
 		if self.health > player_stats['health']:
 			self.health = player_stats['health']
 
+	def normalize_energy(self):
+		if self.energy > player_stats['energy']:
+			self.energy = player_stats['energy']
+
 	def get_status(self):
 		# getting y status
 		if self.direction.y < 0:
@@ -278,7 +282,8 @@ class Player(pygame.sprite.Sprite):
 		self.add_energy()
 		self.move()
 		self.get_status()
-		self.normalize_health()
+		#self.normalize_health()
+		#self.normalize_energy()
 		self.draw_weapon()
 		self.animate()
 		
