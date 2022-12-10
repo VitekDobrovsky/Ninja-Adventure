@@ -283,7 +283,7 @@ class Level:
 
 		if self.clear_tm == 1 and current != 'start':
 			pos = self.chests[current]
-			Chest(pos,[self.visible_sprites, self.obstacle_sprites, self.chests_group], self.player)
+			Chest(pos,[self.visible_sprites, self.obstacle_sprites, self.chests_group], self.player, self.screen, self.visible_sprites)
 
 
 	# ENEMIES

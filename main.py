@@ -43,6 +43,8 @@ TODO:
 	better gui - shadow background with low opacity
 	weapon gui
 	aim assist
+	health from chest??
+	add animation to heal
 	boss
 	convert all to sprite sheets
 	damage animation
