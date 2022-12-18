@@ -28,14 +28,14 @@ class Chest(pygame.sprite.Sprite):
 		# energy
 		self.energy_image = pygame.image.load('graphics/GUI/energy.png').convert_alpha()
 		self.energy_image = pygame.transform.scale(self.energy_image, (BAR_HEIGHT + 7, BAR_HEIGHT + 7))
-		self.energy_image.set_colorkey((20, 27, 27))
 		self.energy = ParticleEffect(self.rect.center, [self.energy_image], self.visible_sprites)
+		self.p2 = True
 
 		# heart
 		self.heart_image = pygame.image.load('graphics/GUI/heart.png').convert_alpha()
 		self.heart_image = pygame.transform.scale(self.heart_image, (BAR_HEIGHT + 8, BAR_HEIGHT + 8))
-		self.heart_image.set_colorkey((20, 27, 27))
 		self.heart = ParticleEffect(self.rect.center, [self.heart_image], self.visible_sprites)
+		self.p1 = True
 
 		# animate
 		self.open_time = None
@@ -51,28 +51,33 @@ class Chest(pygame.sprite.Sprite):
 		if self.open_index == 1:
 			current_time = pygame.time.get_ticks()
 			if current_time - self.open_time >= 250:
-				self.heart.go_to_player_animation(self.player)
+				self.heart.go_to_player_animation(self.player, -1)
 			
-			self.energy.go_to_player_animation(self.player)
+			self.energy.go_to_player_animation(self.player, 1)
+
 
 	def give_content(self):
 		if self.is_open:
-			# give stats
-			# TODO: animation
-			if self.player.health <= 80:
-				self.player.health += 20
-			else:
-				self.player.health += player_stats['health'] - self.player.health
-			
-			if self.player.energy <= 80:
-				self.player.energy += 20
-			else:
-				self.player.energy += player_stats['energy'] - self.player.energy
-			
-			self.is_open = False
 			self.open_index = 1
+			if self.heart.picked or self.energy.picked:
+				# give stats
+				# TODO: animation
+				if self.heart.picked and self.p1:
+					if self.player.health <= 80:
+						self.player.health += 20
+					else:
+						self.player.health += player_stats['health'] - self.player.health
+					self.p1 = False
 
+				if self.energy.picked and self.p2:
+					if self.player.energy <= 80:
+						self.player.energy += 20
+					else:
+						self.player.energy += player_stats['energy'] - self.player.energy
+					self.p2 = False
+			
 	def update(self):
 		self.blit_items()
 		self.open()
+		print(self.energy.picked)
 		self.give_content()

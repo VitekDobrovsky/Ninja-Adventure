@@ -1,5 +1,6 @@
 import pygame
 from support import Sprite_sheet
+from random import randint
 
 
 class ParticleEffect(pygame.sprite.Sprite):
@@ -12,14 +13,19 @@ class ParticleEffect(pygame.sprite.Sprite):
 
 		self.image = self.list[self.index]
 		self.rect = self.image.get_rect(center=pos)
+		self.def_pos = pos
 
 		# go to player animation
 		self.direction = pygame.math.Vector2()
-		self.speed = 5
+		self.speed = 2
 		self.up = True
-		self.height = pygame.math.Vector2(0, -15)
+		self.height = -15
 		self.up_index = 1
 		self.visible_sprites = visible_sprites
+		self.at_floor = False
+		self.added = False
+		self.picked = False
+
 
 	def short_animate(self):
 		if self.index > len(self.list):
@@ -28,33 +34,41 @@ class ParticleEffect(pygame.sprite.Sprite):
 			self.index += self.animation_speed
 			self.image = self.list[float(self.index)]
 
-	def go_to_player_animation(self, player):
+	def go_to_player_animation(self, player, x_side):
 		current_time = pygame.time.get_ticks()
-		self.visible_sprites.add(self)
+		if not self.added:
+			self.visible_sprites.add(self)
+			self.added = True
 
 		if self.up_index <= 10:
+			# x
+			self.direction.x = x_side
+			# y
+			self.direction.y = -1
+			
+			# increase index
 			self.up_index += 1
-			self.rect.y += self.height.y
+			self.speed -= 0.22
+
 		else:
 			self.up = False
+			self.direction.y = 0
+			self.direction.x = 0
 
 		if not self.up:
-			if player.hitbox.centerx < self.rect.centerx:
-				self.direction.x = -1
-			elif player.hitbox.centerx > self.rect.centerx:
-				self.direction.x = 1
-			else:
+			self.direction.y = 1
+			random = randint(0 ,50)
+			if self.rect.y >= self.def_pos[1] - random and not self.at_floor:
+				print(random)
+				self.direction.y = 0
+				self.at_floor = True
+
+			if self.at_floor:
 				self.direction.y = 0
 
-			if player.hitbox.centery < self.rect.centery:
-				self.direction.y = -1
-			elif player.hitbox.centery > self.rect.centery:
-				self.direction.y = 1
-			else:
-				self.direction.y = 0
-
-			if player.hitbox.colliderect(self.rect):
+			if player.hitbox.colliderect(self.rect) and self.at_floor:
+				self.picked = True
 				self.kill()
 
-		self.rect.x += self.direction.x * self.speed
+		self.rect.x += self.direction.x * (self.speed + 5)
 		self.rect.y += self.direction.y * self.speed

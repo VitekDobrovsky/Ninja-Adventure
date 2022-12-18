@@ -42,8 +42,8 @@ TODO:
 	chests
 	better gui - shadow background with low opacity
 	weapon gui
+	animate chest spawn
 	aim assist
-	health from chest??
 	add animation to heal
 	boss
 	convert all to sprite sheets
@@ -52,7 +52,8 @@ TODO:
 	no energy text
 	optimate clear text
 	optimization of gameplay
-	clean up level
 	animate more things
-
+	better shards and heart graphics
+	better chest animation = stuf to floor
+	more levels
 '''
