@@ -19,7 +19,6 @@ class Level:
 		self.visible_sprites = Camera()
 		self.obstacle_sprites = pygame.sprite.Group()
 		self.enemy = pygame.sprite.Group()
-		self.chests_group = pygame.sprite.Group()
 
 		# trap on isand
 		self.baricades = {
@@ -283,7 +282,7 @@ class Level:
 
 		if self.clear_tm == 1 and current != 'start':
 			pos = self.chests[current]
-			Chest(pos,[self.visible_sprites, self.obstacle_sprites, self.chests_group], self.player, self.screen, self.visible_sprites)
+			Chest(pos,[self.visible_sprites, self.obstacle_sprites], self.player, self.screen, self.visible_sprites)
 
 
 	# ENEMIES
@@ -492,7 +491,6 @@ class Level:
 		self.damage_player()
 		self.baricade_animations()
 		self.create_chests()
-		self.chests_group.update()
 		self.trap_in_level()
 		self.draw_gui()
 		self.clear_text()

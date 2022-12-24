@@ -55,13 +55,15 @@ class Text:
 
 # get image from sprite sheet
 class Sprite_sheet:
-	def __init__(self, path):
+	def __init__(self, path, index, size):
 		self.sheet = pygame.image.load(path).convert_alpha()
+		self.index = index
+		self.size = size
 
 	def get_image(self, col, row):
-		image = pygame.Surface((16, 16)).convert_alpha()
-		image.blit(self.sheet, (0, 0), ((row * 16), (col * 16), 16, 16))
-		image = pygame.transform.scale(image, (64, 64))
+		image = pygame.Surface((self.index, self.index)).convert_alpha()
+		image.blit(self.sheet, (0, 0), ((row * self.index), (col * self.index), self.index, self.index))
+		image = pygame.transform.scale(image, self.size)
 		image.set_colorkey((0, 0, 0))
 		return image
 

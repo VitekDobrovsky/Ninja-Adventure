@@ -2,6 +2,7 @@ import pygame
 from settings import *
 from support import *
 from weapon import Weapon
+from particles import Particle
 
 
 class Player(pygame.sprite.Sprite):
@@ -9,9 +10,9 @@ class Player(pygame.sprite.Sprite):
 		super().__init__(groups)
 		
 		# sprite sheets
-		self.idle_sheet = Sprite_sheet('graphics/player/Idle.png')
-		self.walk_sheet = Sprite_sheet('graphics/player/Walk.png')
-		self.attack_sheet = Sprite_sheet('graphics/player/Attack.png')
+		self.idle_sheet = Sprite_sheet('graphics/player/Idle.png', 16, (64, 64))
+		self.walk_sheet = Sprite_sheet('graphics/player/Walk.png', 16, (64, 64))
+		self.attack_sheet = Sprite_sheet('graphics/player/Attack.png', 16, (64, 64))
 
 		# animation frames
 		self.frames = {
@@ -51,6 +52,16 @@ class Player(pygame.sprite.Sprite):
 		self.status = 'down_idle'
 		self.frame_index = 0
 		self.frame_speed = 0.17
+
+		# heal animation
+		self.heal_sheet = Sprite_sheet('graphics/player/Heal.png', 32, (128, 128))
+		self.heal_particle = Particle(self, self.heal_sheet, self.visible_sprites, 3, 'health')
+		self.heal_animation = False
+
+		# energy boost animation
+		self.energy_boost_sheet = Sprite_sheet('graphics/player/Boost_energy.png', 32, (128, 128))
+		self.energy_boost_particle = Particle(self, self.energy_boost_sheet, self.visible_sprites, 3, 'energy')
+		self.energy_boost_animation = False
 
 		# stats
 		self.health = player_stats['health']
@@ -133,7 +144,6 @@ class Player(pygame.sprite.Sprite):
 
 			self.change_weapon_time = pygame.time.get_ticks()
 			self.can_change_weapon = False
-
 
 	def move(self):
 		# normalize direction
@@ -231,6 +241,14 @@ class Player(pygame.sprite.Sprite):
 			self.frame_index = 0
 
 		self.image = animation[int(self.frame_index)]
+
+		# heal animation
+		if self.heal_animation:
+			self.heal_particle.one_time_animation()
+
+		if self.energy_boost_animation:
+			self.energy_boost_particle.one_time_animation()
+
 
 	def draw_weapon(self):
 		# draw weapon

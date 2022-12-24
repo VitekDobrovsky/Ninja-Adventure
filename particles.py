@@ -1,74 +1,48 @@
 import pygame
-from support import Sprite_sheet
-from random import randint
 
 
-class ParticleEffect(pygame.sprite.Sprite):
-	def __init__(self, pos, list, visible_sprites):
+class Particle(pygame.sprite.Sprite):
+	def __init__(self, player, sheet, visible_sprites, frames_count, type):
 		super().__init__()
+		self.image = sheet.get_image(0,0)
+		self.frames = []
 
-		self.list = list
+		self.player = player
+		self.rect = self.image.get_rect(center=(self.player.rect.centerx, self.player.rect.centery))
+
+		self.visible_sprites = visible_sprites
+		self.type = type
+
+		self.add_frames(frames_count, sheet)
+
+		self.added = False
+
 		self.index = 0
 		self.animation_speed = 0.15
 
-		self.image = self.list[self.index]
-		self.rect = self.image.get_rect(center=pos)
-		self.def_pos = pos
+	def add_frames(self, count, sheet):
+		index = 0
+		for i in range(count):
+			self.frames.append(sheet.get_image(0, index))
+			index += 1
 
-		# go to player animation
-		self.direction = pygame.math.Vector2()
-		self.speed = 2
-		self.up = True
-		self.height = -15
-		self.up_index = 1
-		self.visible_sprites = visible_sprites
-		self.at_floor = False
-		self.added = False
-		self.picked = False
-
-
-	def short_animate(self):
-		if self.index > len(self.list):
-			self.kill()
-		else:
-			self.index += self.animation_speed
-			self.image = self.list[float(self.index)]
-
-	def go_to_player_animation(self, player, x_side):
-		current_time = pygame.time.get_ticks()
+	def one_time_animation(self):
 		if not self.added:
 			self.visible_sprites.add(self)
 			self.added = True
 
-		if self.up_index <= 10:
-			# x
-			self.direction.x = x_side
-			# y
-			self.direction.y = -1
-			
-			# increase index
-			self.up_index += 1
-			self.speed -= 0.22
+		self.rect.center = self.player.rect.center
 
+		if self.index <= len(self.frames):
+			self.image = self.frames[int(self.index)]
+			self.index += self.animation_speed
 		else:
-			self.up = False
-			self.direction.y = 0
-			self.direction.x = 0
+			if self.type == 'health':
+				self.player.heal_animation = False
+			elif self.type == 'energy':
+				self.player.energy_boost_animation = False
+			self.added = False
+			self.index = 0
+			self.visible_sprites.remove(self)
 
-		if not self.up:
-			self.direction.y = 1
-			random = randint(0 ,50)
-			if self.rect.y >= self.def_pos[1] - random and not self.at_floor:
-				print(random)
-				self.direction.y = 0
-				self.at_floor = True
 
-			if self.at_floor:
-				self.direction.y = 0
-
-			if player.hitbox.colliderect(self.rect) and self.at_floor:
-				self.picked = True
-				self.kill()
-
-		self.rect.x += self.direction.x * (self.speed + 5)
-		self.rect.y += self.direction.y * self.speed

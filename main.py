@@ -43,6 +43,8 @@ TODO:
 	better gui - shadow background with low opacity
 	weapon gui
 	animate chest spawn
+	throw shurikens
+	add blickering to player when healing
 	aim assist
 	add animation to heal
 	boss
