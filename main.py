@@ -42,7 +42,7 @@ TODO:
 	chests
 	better gui - shadow background with low opacity
 	weapon gui
-	animate chest spawn
+	animate chest spawn	
 	throw shurikens
 	animate weapons
 	add blickering to player when healing

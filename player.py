@@ -10,9 +10,9 @@ class Player(pygame.sprite.Sprite):
 		super().__init__(groups)
 		
 		# sprite sheets
-		self.idle_sheet = Sprite_sheet('graphics/player/Idle.png', 16, (64, 64))
-		self.walk_sheet = Sprite_sheet('graphics/player/Walk.png', 16, (64, 64))
-		self.attack_sheet = Sprite_sheet('graphics/player/Attack.png', 16, (64, 64))
+		self.idle_sheet = Sprite_sheet('graphics/player/Idle.png', (16, 16), (64, 64))
+		self.walk_sheet = Sprite_sheet('graphics/player/Walk.png', (16, 16), (64, 64))
+		self.attack_sheet = Sprite_sheet('graphics/player/Attack.png', (16, 16), (64, 64))
 
 		# animation frames
 		self.frames = {
@@ -54,12 +54,12 @@ class Player(pygame.sprite.Sprite):
 		self.frame_speed = 0.17
 
 		# heal animation
-		self.heal_sheet = Sprite_sheet('graphics/player/Heal.png', 32, (128, 128))
+		self.heal_sheet = Sprite_sheet('graphics/player/Heal.png', (32, 32), (128, 128))
 		self.heal_particle = Particle(self, self.heal_sheet, self.visible_sprites, 3, 'health')
 		self.heal_animation = False
 
 		# energy boost animation
-		self.energy_boost_sheet = Sprite_sheet('graphics/player/Boost_energy.png', 32, (128, 128))
+		self.energy_boost_sheet = Sprite_sheet('graphics/player/Boost_energy.png', (32, 32), (128, 128))
 		self.energy_boost_particle = Particle(self, self.energy_boost_sheet, self.visible_sprites, 3, 'energy')
 		self.energy_boost_animation = False
 

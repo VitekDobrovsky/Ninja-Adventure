@@ -9,7 +9,7 @@ class Chest(pygame.sprite.Sprite):
 		super().__init__(groups)
 		
 		# images
-		self.sheet = Sprite_sheet('graphics/tiles/BigTreasureChest.png', 16, (64, 64))
+		self.sheet = Sprite_sheet('graphics/tiles/BigTreasureChest.png', (16, 16), (64, 64))
 		self.image = self.sheet.get_image(0,0)
 		self.open_chest = self.sheet.get_image(0,4)
 		self.frames = [self.sheet.get_image(0,0), self.sheet.get_image(0,1), self.sheet.get_image(0,2), self.sheet.get_image(0,3)]

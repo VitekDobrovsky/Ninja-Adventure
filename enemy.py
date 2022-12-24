@@ -9,7 +9,7 @@ class Enemy(pygame.sprite.Sprite):
 		super().__init__(groups)
 		# sprite sheet
 		path = 'graphics/monsters/' + type + '.png'
-		self.sprite_sheet = Sprite_sheet(path, 16, (64, 64))
+		self.sprite_sheet = Sprite_sheet(path, (16, 16), (64, 64))
 		idle = self.sprite_sheet.get_image(0,0)
 
 		# set up

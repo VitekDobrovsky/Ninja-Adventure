@@ -33,7 +33,7 @@ class Baricade(pygame.sprite.Sprite):
 	def __init__(self, pos, groups, baricades, place):
 		super().__init__(groups)
 		# main tile
-		self.sprite_sheet = Sprite_sheet('graphics/tiles/baricades/rocks_test.png', 16, (64, 64)) 
+		self.sprite_sheet = Sprite_sheet('graphics/tiles/baricades/rocks_test.png', (16, 16), (64, 64)) 
 		self.image = self.sprite_sheet.get_image(0,3)
 		self.frames = [self.sprite_sheet.get_image(0,3), self.sprite_sheet.get_image(0,2), self.sprite_sheet.get_image(0,1), self.sprite_sheet.get_image(0,0)]
 		self.groups = groups

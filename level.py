@@ -71,12 +71,18 @@ class Level:
 		self.enemy_count = 0
 
 		# 'CLEAR' text
-		self.clear_txt = pygame.image.load('graphics/GUI/clear_text.png').convert_alpha()
-		self.clear_txt.set_colorkey('#141B1B')
-		self.clear_txt = pygame.transform.scale(self.clear_txt, (self.clear_txt.get_size()[0] * 11, self.clear_txt.get_size()[1] * 9))
-		self.clear_txt_rect = self.clear_txt.get_rect(center=(WIDTH / 2, HEIGHT / 4))
+		#self.clear_txt.set_colorkey('#141B1B')
+		
+		self.t_clear_sheet = Sprite_sheet('graphics/GUI/clear_text_sheet.png', (41, 16), (41 * 11, 16 * 9))
+		self.t_clear_image = self.t_clear_sheet.get_image(0,0)
+		self.t_clear_rect = self.t_clear_image.get_rect(center=(WIDTH / 2, HEIGHT / 4))
 
-		self.al = 0
+		self.t_clear_animate = False
+		self.t_clear_index = 0
+		self.t_clear_speed = 0.05
+		self.t_clear_frames = [self.t_clear_sheet.get_image(0,0), self.t_clear_sheet.get_image(1,0), self.t_clear_sheet.get_image(2,0),
+								self.t_clear_sheet.get_image(3,0), self.t_clear_sheet.get_image(4,0)]
+
 		self.clear_tm = 0
 
 		# chests
@@ -436,18 +442,30 @@ class Level:
 			return True
 
 	def clear_text(self):
-		if self.al >= 0:
-			self.al -= 5
-		
-		self.screen.blit(self.clear_txt, self.clear_txt_rect)
-
-		self.clear_txt.set_alpha(self.al)
-
 		if self.clear_tm <= 50 and self.enemy_count == 0 and self.get_island() != 'start':
 			self.clear_tm += 1
-			self.al = 255
 		if self.enemy_count != 0:
 			self.clear_tm = 0
+
+		if self.clear_tm == 1:
+			self.t_clear_animate = True
+			self.t_clear_index = 0
+
+		if int(self.t_clear_index) == 2:
+			self.t_clear_speed = 0.01
+		else:
+			self.t_clear_speed = 0.1
+	
+
+
+		if self.t_clear_animate:
+			self.screen.blit(self.t_clear_image, self.t_clear_rect)
+			if self.t_clear_index <= len(self.t_clear_frames):
+				self.t_clear_image = self.t_clear_frames[int(self.t_clear_index)]
+				self.t_clear_index += self.t_clear_speed
+			else:
+				self.t_clear_animate = False
+
 
 	def clear_island(self):
 		if self.enemy_count == 0:

@@ -61,8 +61,8 @@ class Sprite_sheet:
 		self.size = size
 
 	def get_image(self, col, row):
-		image = pygame.Surface((self.index, self.index)).convert_alpha()
-		image.blit(self.sheet, (0, 0), ((row * self.index), (col * self.index), self.index, self.index))
+		image = pygame.Surface(self.index).convert_alpha()
+		image.blit(self.sheet, (0, 0), ((row * self.index[0]), (col * self.index[1]), self.index[0], self.index[1]))
 		image = pygame.transform.scale(image, self.size)
 		image.set_colorkey((0, 0, 0))
 		return image
