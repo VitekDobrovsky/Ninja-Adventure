@@ -71,21 +71,11 @@ class Level:
 		self.enemy_count = 0
 
 		# 'CLEAR' text
-		self.text1 = Text(self.screen, 'CLEAR', 'graphics/fonts/game.ttf', 100, (WIDTH/2, HEIGHT/3), 'black'), Text(self.screen, 'clear', 'graphics/fonts/game.ttf', 120, (WIDTH/2, HEIGHT/3), RED_TEXT)
-		self.c = Text(self.screen, 'C', 'graphics/fonts/game.ttf', 80, (WIDTH/2 - 138, HEIGHT/3), RED_TEXT)
-		self.l = Text(self.screen, 'L', 'graphics/fonts/game.ttf', 80, (WIDTH/2 - 69, HEIGHT/3), RED_TEXT)
-		self.e = Text(self.screen, 'E', 'graphics/fonts/game.ttf', 80, (WIDTH/2, HEIGHT/3), RED_TEXT)
-		self.a = Text(self.screen, 'A', 'graphics/fonts/game.ttf', 80, (WIDTH/2 + 68, HEIGHT/3), RED_TEXT)
-		self.r = Text(self.screen, 'R', 'graphics/fonts/game.ttf', 80, (WIDTH/2 + 136, HEIGHT/3), RED_TEXT)			
-		
-		self.text1[0].text_surf.set_alpha(0)
-		self.text1[1].text_surf.set_alpha(0)
-		self.c.text_surf.set_alpha(0)
-		self.l.text_surf.set_alpha(0)
-		self.e.text_surf.set_alpha(0)
-		self.a.text_surf.set_alpha(0)
-		self.r.text_surf.set_alpha(0)
-		
+		self.clear_txt = pygame.image.load('graphics/GUI/clear_text.png').convert_alpha()
+		self.clear_txt.set_colorkey('#141B1B')
+		self.clear_txt = pygame.transform.scale(self.clear_txt, (self.clear_txt.get_size()[0] * 11, self.clear_txt.get_size()[1] * 9))
+		self.clear_txt_rect = self.clear_txt.get_rect(center=(WIDTH / 2, HEIGHT / 4))
+
 		self.al = 0
 		self.clear_tm = 0
 
@@ -284,7 +274,6 @@ class Level:
 			pos = self.chests[current]
 			Chest(pos,[self.visible_sprites, self.obstacle_sprites], self.player, self.screen, self.visible_sprites)
 
-
 	# ENEMIES
 	def sort_enemy(self, x, y, type):
 		# enemy sorting to enemy lists 
@@ -450,26 +439,9 @@ class Level:
 		if self.al >= 0:
 			self.al -= 5
 		
-		self.c.draw()
-		self.l.draw()
-		self.e.draw()
-		self.a.draw()
-		self.r.draw()
-		draw_surface(self.screen, WIDTH/2 - 159,HEIGHT/3 - 20 ,35,60, RED_TEXT, self.al)
-		draw_surface(self.screen, WIDTH/2 - 80,HEIGHT/3 + 10 ,40,10, RED_TEXT, self.al)
-		draw_surface(self.screen, WIDTH/2 - 20 ,HEIGHT/3 - 20,35,60, RED_TEXT, self.al)
-		draw_surface(self.screen, WIDTH/2 + 50,HEIGHT/3 - 20,30,60, RED_TEXT, self.al)
-		draw_surface(self.screen, WIDTH/2 + 110,HEIGHT/3 - 30,40,55, RED_TEXT, self.al)
-		self.text1[1].draw()
-		self.text1[0].draw()
+		self.screen.blit(self.clear_txt, self.clear_txt_rect)
 
-		self.text1[0].text_surf.set_alpha(self.al)
-		self.text1[1].text_surf.set_alpha(self.al)
-		self.c.text_surf.set_alpha(self.al)
-		self.l.text_surf.set_alpha(self.al)
-		self.e.text_surf.set_alpha(self.al)
-		self.a.text_surf.set_alpha(self.al)
-		self.r.text_surf.set_alpha(self.al)
+		self.clear_txt.set_alpha(self.al)
 
 		if self.clear_tm <= 50 and self.enemy_count == 0 and self.get_island() != 'start':
 			self.clear_tm += 1

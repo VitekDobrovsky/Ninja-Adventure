@@ -44,6 +44,7 @@ TODO:
 	weapon gui
 	animate chest spawn
 	throw shurikens
+	animate weapons
 	add blickering to player when healing
 	aim assist
 	add animation to heal
@@ -52,6 +53,7 @@ TODO:
 	damage animation
 	change size of gui
 	no energy text
+	animate clear text
 	optimate clear text
 	optimization of gameplay
 	animate more things
