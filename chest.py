@@ -33,14 +33,20 @@ class Chest(pygame.sprite.Sprite):
 		# energy
 		self.energy_image = pygame.image.load('graphics/GUI/energy.png').convert_alpha()
 		self.energy_image = pygame.transform.scale(self.energy_image, (BAR_HEIGHT + 7, BAR_HEIGHT + 7))
-		self.energy = Item(self.rect.center, [self.energy_image], self.visible_sprites)
+		self.energy = Item(self.rect.center, [self.energy_image], self.visible_sprites, 5)
 		self.p2 = True
 
 		# heart
 		self.heart_image = pygame.image.load('graphics/GUI/heart.png').convert_alpha()
 		self.heart_image = pygame.transform.scale(self.heart_image, (BAR_HEIGHT + 8, BAR_HEIGHT + 8))
-		self.heart = Item(self.rect.center, [self.heart_image], self.visible_sprites)
+		self.heart = Item(self.rect.center, [self.heart_image], self.visible_sprites, 6)
 		self.p1 = True
+
+		# coin
+		self.coin_image = pygame.image.load('graphics/GUI/coin.png').convert_alpha()
+		self.coin_image = pygame.transform.scale(self.coin_image, (BAR_HEIGHT + 5, BAR_HEIGHT + 5))
+		self.coin = Item(self.rect.center, [self.coin_image], self.visible_sprites, 3.5)
+		self.p3 = True
 
 		# animate
 		self.open_time = None
@@ -60,9 +66,10 @@ class Chest(pygame.sprite.Sprite):
 			current_time = pygame.time.get_ticks()
 			if current_time - self.open_time >= 250:
 				self.heart.items_from_chest(self.player, -1)
-			
-			self.energy.items_from_chest(self.player, 1)
+			if current_time - self.open_time >= 100:
+				self.coin.items_from_chest(self.player, -1)
 
+			self.energy.items_from_chest(self.player, 1)
 
 	def give_content(self):
 		if self.is_open:
@@ -85,6 +92,10 @@ class Chest(pygame.sprite.Sprite):
 					else:
 						self.player.energy += player_stats['energy'] - self.player.energy
 					self.p2 = False
+
+				if self.coin.picked and self.p3:
+					self.player.coins += 1
+					self.p3 = False
 	
 	def animate(self):
 		if self.index <= len(self.frames):

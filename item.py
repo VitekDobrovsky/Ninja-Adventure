@@ -3,7 +3,7 @@ from random import randint
 
 
 class Item(pygame.sprite.Sprite):
-	def __init__(self, pos, list, visible_sprites):
+	def __init__(self, pos, list, visible_sprites, x):
 		super().__init__()
 
 		self.list = list
@@ -24,6 +24,7 @@ class Item(pygame.sprite.Sprite):
 		self.at_floor = False
 		self.added = False
 		self.picked = False
+		self.random_x = x
 
 	def items_from_chest(self, player, x_side):
 		current_time = pygame.time.get_ticks()
@@ -60,5 +61,5 @@ class Item(pygame.sprite.Sprite):
 				self.picked = True
 				self.kill()
 
-		self.rect.x += self.direction.x * (self.speed + 5)
+		self.rect.x += self.direction.x * (self.speed + self.random_x)
 		self.rect.y += self.direction.y * self.speed

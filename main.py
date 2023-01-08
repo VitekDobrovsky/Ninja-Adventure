@@ -22,7 +22,7 @@ class NinjaAdventure:
 					pygame.quit()
 					exit()
 					break
-			
+			  
 			# updating
 			self.screen.fill('#71DDEE')
 			self.level.run()
@@ -36,23 +36,12 @@ if __name__ == '__main__':
 
 '''
 TODO:
-	add coins
-	minimap
-	more weapons
-	chests
-	better gui - shadow background with low opacity
-	weapon gui
-	animate chest spawn	
-	throw shurikens
-	animate weapons
-	add blickering to player when healing
-	aim assist
-	add animation to heal
+	GUI
 	boss
-	convert all to sprite sheets
 	damage animation
-	change size of gui
+	picking coin animation
 	no energy text
+	screen shake
 	animate clear text
 	optimate clear text
 	optimization of gameplay

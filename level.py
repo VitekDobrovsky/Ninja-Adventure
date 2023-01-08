@@ -69,9 +69,6 @@ class Level:
 
 		# enemy damage
 		self.enemy_count = 0
-
-		# 'CLEAR' text
-		#self.clear_txt.set_colorkey('#141B1B')
 		
 		self.t_clear_sheet = Sprite_sheet('graphics/GUI/clear_text_sheet.png', (41, 16), (41 * 11, 16 * 9))
 		self.t_clear_image = self.t_clear_sheet.get_image(0,0)

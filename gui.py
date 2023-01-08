@@ -8,21 +8,6 @@ class GUI:
 		self.screen = pygame.display.get_surface()
 		self.player = player
 
-		# player faceset
-		self.faceset_image = pygame.image.load('graphics/GUI/face_set.png').convert_alpha()
-		self.faceset_image = pygame.transform.scale(self.faceset_image, (153 * 0.7, 143 * 0.7))
-		self.faceset_rect = self.faceset_image.get_rect(center= (60,60))
-
-		# golden ring
-		self.ring_image = pygame.image.load('graphics/GUI/gold_circle.png').convert_alpha()
-		self.ring_image = pygame.transform.scale(self.ring_image, (156 * 0.71, 157 * 0.71))
-		self.ring_rect = self.ring_image.get_rect(center= (60,60))
-
-		# map
-		self.map_image = pygame.image.load('graphics/GUI/map.png').convert_alpha()
-		self.map_image = pygame.transform.scale(self.map_image, (WIDTH * 0.5, WIDTH * 0.5))
-		self.map_rect = self.map_image.get_rect(center= (WIDTH * 0.5 , HEIGHT * 0.5))
-
 		# frame
 		self.frame_image = pygame.image.load('graphics/GUI/frame.png').convert_alpha()
 		self.frame_image = pygame.transform.scale(self.frame_image, (WIDTH * 0.5 + 50, WIDTH * 0.5 + 40))
@@ -39,6 +24,20 @@ class GUI:
 		self.energy_image = pygame.transform.scale(self.energy_image, (BAR_HEIGHT + 7, BAR_HEIGHT + 7))
 		self.energy_image.set_colorkey((20, 27, 27))
 		self.energy_rect = self.energy_image.get_rect(topleft = (5, 38))
+
+		# coins
+		self.coin_image = pygame.image.load('graphics/GUI/coin.png').convert_alpha()
+		self.coin_image = pygame.transform.scale(self.coin_image, (BAR_HEIGHT + 5, BAR_HEIGHT + 5))
+		self.coin_image.set_colorkey((20, 27, 27))
+		self.coin_rect = self.coin_image.get_rect(topleft= (5, 74))
+
+		# 'no energy' text
+		self.t_noenergy_image = pygame.image.load('graphics/GUI/no_energy_text.png').convert_alpha()
+		self.t_noenergy_image = pygame.transform.scale2x(self.t_noenergy_image)
+		self.t_noenergy_image = pygame.transform.scale2x(self.t_noenergy_image)
+		self.t_noenergy_rect = self.t_noenergy_image.get_rect(center= (WIDTH / 2, HEIGHT - 50))
+		self.t_noenergy_show = False
+		self.t_noenergy_time = None
 
 	def health_bar(self):
 		# draw health bar
@@ -57,14 +56,34 @@ class GUI:
 
 		self.screen.blit(self.energy_image, self.energy_rect)
 
+	def coins(self):
+		self.screen.blit(self.coin_image, self.coin_rect)
+		Text(self.screen, str(self.player.coins), 'graphics/fonts/Gameplay.ttf', 20, (45, 85), 'white').draw()
+
+	def t_noenergy(self):
+		current_time = pygame.time.get_ticks()
+		keys = pygame.key.get_pressed()
+		if self.player.energy < 1:
+			if keys[pygame.K_SPACE]:
+				#self.t_noenergy_time = pygame.time.get_ticks()
+				#self.t_noenergy_show = True
+				pass
+
+		if self.t_noenergy_show:
+			self.screen.blit(self.t_noenergy_image, self.t_noenergy_rect)
+
+		# cooldown
+		if self.t_noenergy_show:
+			if current_time - self.t_noenergy_time > 500:
+				self.t_noenergy_show = False
+
+		if keys[pygame.K_SPACE] and self.player.energy <= 5 and self.player.can_attack:
+			self.t_noenergy_time = pygame.time.get_ticks()
+			self.t_noenergy_show = True
+
 	def display_stats(self):
 		self.health_bar()
 		self.energy_bar()
-		#self.screen.blit(self.faceset_image, self.faceset_rect)
-		#self.screen.blit(self.ring_image, self.ring_rect)
-
-	def map(self):
-		#draw_rect(self.screen, self.map_rect.x - 20, self.map_rect.y - 20, WIDTH * 0.5 + 40, WIDTH * 0.5 + 40, GUI_COLOR)
-		self.screen.blit(self.map_image, self.map_rect)
-		self.screen.blit(self.frame_image, self.frame_rect)
+		self.coins()
+		self.t_noenergy()
 		

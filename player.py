@@ -66,6 +66,7 @@ class Player(pygame.sprite.Sprite):
 		# stats
 		self.health = player_stats['health']
 		self.energy = player_stats['energy']
+		self.coins = 0 
 
 		# take_damage
 		self.vulnerable = True 
@@ -122,7 +123,7 @@ class Player(pygame.sprite.Sprite):
 			self.attack_time = pygame.time.get_ticks()
 			self.can_attack = False
 
-		# subtract player energy
+			# subtract player energy
 			if self.energy > 1:
 				self.energy -= 5
 			else:
