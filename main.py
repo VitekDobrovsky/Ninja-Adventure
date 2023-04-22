@@ -50,3 +50,4 @@ TODO:
 	better chest animation = stuf to floor
 	more levels
 '''
+# fix enemy going from player

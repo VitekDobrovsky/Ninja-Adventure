@@ -393,13 +393,22 @@ class Level:
 		for enemy in self.enemy:
 			enemy.kill()
 
+	def walk_from_player_if_dead(self):
+		if self.player.dead:
+			for enemy in self.enemy:
+				if enemy.hitbox.colliderect(self.player.rect.inflate(50,50)):
+					enemy.direction.x *= (-1)			
+					enemy.direction.y *= (-1)
+						
+
 	# PLAYER
 	def damage_player(self):
-		for enemy in self.enemy.sprites():
-			if enemy.can_attack and self.player.vulnerable and enemy.direction == (0,0):
-				self.player.health -= ENEMY_DAMAGE[enemy.type]
-				self.player.vulnerable = False
-				self.player.damage_time = pygame.time.get_ticks()
+		if not self.player.dead:
+			for enemy in self.enemy.sprites():
+				if enemy.can_attack and self.player.vulnerable and enemy.direction == (0,0):
+					self.player.health -= ENEMY_DAMAGE[enemy.type]
+					self.player.vulnerable = False
+					self.player.damage_time = pygame.time.get_ticks()
 
 	def draw_gui(self):
 		if self.show_map:
@@ -462,7 +471,6 @@ class Level:
 				self.t_clear_index += self.t_clear_speed
 			else:
 				self.t_clear_animate = False
-
 
 	def clear_island(self):
 		if self.enemy_count == 0:

@@ -67,6 +67,7 @@ class Player(pygame.sprite.Sprite):
 		self.health = player_stats['health']
 		self.energy = player_stats['energy']
 		self.coins = 0 
+		self.dead = False
 
 		# take_damage
 		self.vulnerable = True 
@@ -100,51 +101,52 @@ class Player(pygame.sprite.Sprite):
 		self.stop_time = None 
 
 	def input(self):
-		keys = pygame.key.get_pressed()
+		if  not self.dead:
+			keys = pygame.key.get_pressed()
 
-		# evet handler
-		if keys[pygame.K_w]:
-			self.direction.y = -1
-		elif keys[pygame.K_s]:
-			self.direction.y = 1
-		else:
-			self.direction.y = 0
-
-		if keys[pygame.K_d]:
-			self.direction.x = 1
-		elif keys[pygame.K_a]:
-			self.direction.x = -1
-		else:
-			self.direction.x = 0
-
-		if keys[pygame.K_SPACE] and self.can_attack and self.energy >= 5:
-			# attack cooldown
-			self.attack = True
-			self.attack_time = pygame.time.get_ticks()
-			self.can_attack = False
-
-			# subtract player energy
-			if self.energy > 1:
-				self.energy -= 5
+			# evet handler
+			if keys[pygame.K_w]:
+				self.direction.y = -1
+			elif keys[pygame.K_s]:
+				self.direction.y = 1
 			else:
-				self.energy = 0
+				self.direction.y = 0
 
-			# charge cooldown
-			self.charge = True
-			self.charge_time = pygame.time.get_ticks()
-
-			# stop after charge
-			self.stop = True 
-			self.stop_time = pygame.time.get_ticks()
-
-		if keys[pygame.K_r] and self.can_change_weapon:
-			if self.weapon_index < 1:
-				self.weapon_index += 1
+			if keys[pygame.K_d]:
+				self.direction.x = 1
+			elif keys[pygame.K_a]:
+				self.direction.x = -1
 			else:
-				self.weapon_index = 0
+				self.direction.x = 0
 
-			self.change_weapon_time = pygame.time.get_ticks()
-			self.can_change_weapon = False
+			if keys[pygame.K_SPACE] and self.can_attack and self.energy >= 5:
+				# attack cooldown
+				self.attack = True
+				self.attack_time = pygame.time.get_ticks()
+				self.can_attack = False
+
+				# subtract player energy
+				if self.energy > 1:
+					self.energy -= 5
+				else:
+					self.energy = 0
+
+				# charge cooldown
+				self.charge = True
+				self.charge_time = pygame.time.get_ticks()
+
+				# stop after charge
+				self.stop = True 
+				self.stop_time = pygame.time.get_ticks()
+
+			if keys[pygame.K_r] and self.can_change_weapon:
+				if self.weapon_index < 1:
+					self.weapon_index += 1
+				else:
+					self.weapon_index = 0
+
+				self.change_weapon_time = pygame.time.get_ticks()
+				self.can_change_weapon = False
 
 	def move(self):
 		# normalize direction
@@ -167,6 +169,11 @@ class Player(pygame.sprite.Sprite):
 		if self.stop and not self.charge:
 			self.direction.y = 0
 			self.direction.x = 0
+
+		# dont move if dead
+		if self.dead:
+			self.direction.x = 0
+			self.direction.y = 0
 
 		# apply move
 		self.hitbox.x += self.direction.x * self.speed
@@ -199,6 +206,8 @@ class Player(pygame.sprite.Sprite):
 	def normalize_health(self):
 		if self.health > player_stats['health']:
 			self.health = player_stats['health']
+		elif self.health <= 0:
+			self.health = 0
 
 	def normalize_energy(self):
 		if self.energy > player_stats['energy']:
@@ -250,7 +259,6 @@ class Player(pygame.sprite.Sprite):
 		if self.energy_boost_animation:
 			self.energy_boost_particle.one_time_animation()
 
-
 	def draw_weapon(self):
 		# draw weapon
 		if self.charge or self.stop:
@@ -295,8 +303,13 @@ class Player(pygame.sprite.Sprite):
 			if current_time - self.change_weapon_time >= self.change_weapon_cooldown:
 				self.can_change_weapon = True
 
+	def is_dead(self):
+		if self.health <= 0:
+			self.dead = True
+			
 	def update(self):
 		self.cooldown()
+		self.is_dead()
 		self.input()
 		self.add_energy()
 		self.move()

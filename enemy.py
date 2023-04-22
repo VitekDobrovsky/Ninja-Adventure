@@ -25,6 +25,11 @@ class Enemy(pygame.sprite.Sprite):
 		# move
 		self.direction = pygame.math.Vector2()
 		self.speed = speed
+		self.last_direction = {
+			'x': 0,
+			'y': 0
+			}
+		self.collide = False
 
 		# get damage
 		self.can_enemy_damage = True
@@ -53,6 +58,7 @@ class Enemy(pygame.sprite.Sprite):
 		# attack
 		self.can_attack = False
 
+
 	def move(self):
 		# normalize direction
 		if self.direction.magnitude() != 0:
@@ -71,9 +77,11 @@ class Enemy(pygame.sprite.Sprite):
 		if self.player.hitbox.x + 64 < self.hitbox.x:
 			self.direction.x = -1
 			self.can_attack = False
+			self.last_direction['x'] = -1
 		elif self.player.hitbox.x - 64 > self.hitbox.x:
 			self.direction.x = 1
 			self.can_attack = False
+			self.last_direction['x'] = 1
 		else:
 			self.direction.x = 0
 			self.can_attack = True
@@ -81,13 +89,24 @@ class Enemy(pygame.sprite.Sprite):
 		if self.player.hitbox.y + 64 < self.hitbox.y:
 			self.direction.y = -1
 			self.can_attack = False
+			self.last_direction['y'] = -1
 		elif self.player.hitbox.y - 64 > self.hitbox.y:
 			self.direction.y = 1
 			self.can_attack = False
+			self.last_direction['y'] = 1
 		else:
 			self.direction.y = 0
 			self.can_attack = True
 
+		if self.player.dead:
+			if not self.collide:
+				self.direction.x = self.last_direction['x'] * (-1)
+				self.direction.y = self.last_direction['y'] * (-1)
+			else:
+				self.direction.x = 0
+				self.direction.y = 0
+			
+				
 	def get_status(self):
 		# getting y status
 		if self.direction.y < 0:
@@ -118,16 +137,17 @@ class Enemy(pygame.sprite.Sprite):
 		if direction == 'horizontal':
 			for sprite in self.obstacle_sprites:
 				if sprite.hitbox.colliderect(self.hitbox):
+					self.collide = True
 					if self.direction.x > 0:
 						self.hitbox.right = sprite.hitbox.left
 					if self.direction.x < 0:
 						self.hitbox.left = sprite.hitbox.right
 
-
 		# check vertical collision
 		elif direction == 'vertical':
 			for sprite in self.obstacle_sprites:
 				if sprite.hitbox.colliderect(self.hitbox):
+					self.collide = True
 					if self.direction.y > 0:
 						self.hitbox.bottom = sprite.hitbox.top
 					if self.direction.y < 0:
@@ -172,6 +192,7 @@ class Enemy(pygame.sprite.Sprite):
 		self.get_status()
 		self.animate()
 		self.cooldown()
+		print(self.collide)
 
 
 class Dead_enemy(pygame.sprite.Sprite):
