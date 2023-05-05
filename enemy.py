@@ -192,8 +192,6 @@ class Enemy(pygame.sprite.Sprite):
 		self.get_status()
 		self.animate()
 		self.cooldown()
-		print(self.collide)
-
 
 class Dead_enemy(pygame.sprite.Sprite):
 	def __init__(self, pos, groups, type):

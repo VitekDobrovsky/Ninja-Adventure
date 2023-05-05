@@ -31,7 +31,8 @@ class Player(pygame.sprite.Sprite):
 			'down_attack': [self.attack_sheet.get_image(0,0)],
 			'up_attack': [self.attack_sheet.get_image(0,1)],
 			'left_attack': [self.attack_sheet.get_image(0,2)],
-			'right_attack': [self.attack_sheet.get_image(0,3)]
+			'right_attack': [self.attack_sheet.get_image(0,3)],
+			'dead': [pygame.transform.scale(pygame.image.load('graphics/player/Dead.png').convert_alpha(), (64, 64))]
 			}
 
 		# player set up
@@ -39,6 +40,7 @@ class Player(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect(topleft=pos)
 		self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET_Y['player'])
 		self.screen = pygame.display.get_surface()
+		self.start_pos = pos
 
 		# move
 		self.direction = pygame.math.Vector2()
@@ -101,9 +103,8 @@ class Player(pygame.sprite.Sprite):
 		self.stop_time = None 
 
 	def input(self):
+		keys = pygame.key.get_pressed()
 		if  not self.dead:
-			keys = pygame.key.get_pressed()
-
 			# evet handler
 			if keys[pygame.K_w]:
 				self.direction.y = -1
@@ -147,6 +148,12 @@ class Player(pygame.sprite.Sprite):
 
 				self.change_weapon_time = pygame.time.get_ticks()
 				self.can_change_weapon = False
+		else:
+			if keys[pygame.K_SPACE]:
+				self.hitbox.x = self.start_pos[0]
+				self.hitbox.y = self.start_pos[1]
+				self.health = player_stats['health']
+				self.status = 'down_idle'
 
 	def move(self):
 		# normalize direction
@@ -235,12 +242,18 @@ class Player(pygame.sprite.Sprite):
 					self.status += '_idle'
 		
 		# adding attack to status
-		if self.charge or self.stop:
-			self.status = self.status.replace('_idle', '')
-			if len(self.status) < 6:
-				self.status += '_attack'
-		else:
-			self.status = self.status.replace('_attack', '')
+		if not self.dead:
+			if self.charge or self.stop:
+				self.status = self.status.replace('_idle', '')
+				if len(self.status) < 6:
+					self.status += '_attack'
+			else:
+				self.status = self.status.replace('_attack', '')
+		
+		# dead status
+		if self.dead:
+			self.status = 'dead'
+
 
 	def animate(self):
 		# animation
@@ -306,11 +319,16 @@ class Player(pygame.sprite.Sprite):
 	def is_dead(self):
 		if self.health <= 0:
 			self.dead = True
-			
+		else:
+			self.dead = False
+
+	def reset(self):
+		pass
+
 	def update(self):
 		self.cooldown()
-		self.is_dead()
 		self.input()
+		self.is_dead()
 		self.add_energy()
 		self.move()
 		self.get_status()
