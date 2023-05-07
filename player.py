@@ -45,6 +45,7 @@ class Player(pygame.sprite.Sprite):
 		# move
 		self.direction = pygame.math.Vector2()
 		self.speed = player_stats['speed']
+		self.paralized = [False, 1000, None]
 
 		# groups
 		self.obstacle_sprites = obstacle_sprites
@@ -100,11 +101,13 @@ class Player(pygame.sprite.Sprite):
 		# stop after attack
 		self.stop = False 
 		self.stop_cooldown = 200
-		self.stop_time = None 
+		self.stop_time = None
+
+		self.restart = False
 
 	def input(self):
 		keys = pygame.key.get_pressed()
-		if  not self.dead:
+		if not self.dead:
 			# evet handler
 			if keys[pygame.K_w]:
 				self.direction.y = -1
@@ -150,10 +153,7 @@ class Player(pygame.sprite.Sprite):
 				self.can_change_weapon = False
 		else:
 			if keys[pygame.K_SPACE]:
-				self.hitbox.x = self.start_pos[0]
-				self.hitbox.y = self.start_pos[1]
-				self.health = player_stats['health']
-				self.status = 'down_idle'
+				self.restart = True
 
 	def move(self):
 		# normalize direction
@@ -253,7 +253,6 @@ class Player(pygame.sprite.Sprite):
 		# dead status
 		if self.dead:
 			self.status = 'dead'
-
 
 	def animate(self):
 		# animation

@@ -25,7 +25,11 @@ class NinjaAdventure:
 			  
 			# updating
 			self.screen.fill('#71DDEE')
-			self.level.run()
+			if not self.level.player.restart:
+				self.level.run()
+			else:
+				self.level = Level()
+					
 			pygame.display.update()
 			self.clock.tick(FPS)
 
@@ -36,18 +40,19 @@ if __name__ == '__main__':
 
 '''
 TODO:
-	GUI
-	boss
-	damage animation
-	picking coin animation
-	no energy text
-	screen shake
-	animate clear text
-	optimate clear text
-	optimization of gameplay
-	animate more things
-	better shards and heart graphics
-	better chest animation = stuf to floor
-	more levels
+	ANIMATE:
+		taking damage
+		enemy attack
+		kill bush
+		death
+	
+	GRAPHICS:
+		dead sprites
+		dead text (and play again)
+
+	fix:
+
+	OTHER:
+		better gameplay
+		main menu
 '''
-# fix enemy going from player
