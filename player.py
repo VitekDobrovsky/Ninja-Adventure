@@ -13,6 +13,7 @@ class Player(pygame.sprite.Sprite):
 		self.idle_sheet = Sprite_sheet('graphics/player/Idle.png', (16, 16), (64, 64))
 		self.walk_sheet = Sprite_sheet('graphics/player/Walk.png', (16, 16), (64, 64))
 		self.attack_sheet = Sprite_sheet('graphics/player/Attack.png', (16, 16), (64, 64))
+		self.spawning_sheet = Sprite_sheet('graphics/player/Spawn.png', (32,32), (128,128))
 
 		# animation frames
 		self.frames = {
@@ -32,7 +33,7 @@ class Player(pygame.sprite.Sprite):
 			'up_attack': [self.attack_sheet.get_image(0,1)],
 			'left_attack': [self.attack_sheet.get_image(0,2)],
 			'right_attack': [self.attack_sheet.get_image(0,3)],
-			'dead': [pygame.transform.scale(pygame.image.load('graphics/player/Dead.png').convert_alpha(), (64, 64))]
+			'dead': [pygame.transform.scale(pygame.image.load('graphics/player/Dead.png').convert_alpha(), (64, 64))],
 			}
 
 		# player set up
@@ -40,12 +41,13 @@ class Player(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect(topleft=pos)
 		self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET_Y['player'])
 		self.screen = pygame.display.get_surface()
-		self.start_pos = pos
+		
+		for image in self.frames['down_idle']:
+			image.set_alpha(0)
 
 		# move
 		self.direction = pygame.math.Vector2()
 		self.speed = player_stats['speed']
-		self.paralized = [False, 1000, None]
 
 		# groups
 		self.obstacle_sprites = obstacle_sprites
@@ -55,6 +57,10 @@ class Player(pygame.sprite.Sprite):
 		self.status = 'down_idle'
 		self.frame_index = 0
 		self.frame_speed = 0.17
+
+		# spawn animation:
+		self.spawn_sheet = Sprite_sheet('graphics/player/Spawn.png', (32,32), (128,128))
+		self.spawn_animation = Particle(self, self.spawn_sheet, self.visible_sprites, 6, 'spawn')
 
 		# heal animation
 		self.heal_sheet = Sprite_sheet('graphics/player/Heal.png', (32, 32), (128, 128))
@@ -103,7 +109,9 @@ class Player(pygame.sprite.Sprite):
 		self.stop_cooldown = 200
 		self.stop_time = None
 
+		# other
 		self.restart = False
+		self.spawning = True
 
 	def input(self):
 		keys = pygame.key.get_pressed()
@@ -230,7 +238,7 @@ class Player(pygame.sprite.Sprite):
 			if len(self.status) < 6:
 				if self.direction.x == 0:
 					self.status += '_idle'
-		
+				
 		# getting x status
 		if self.direction.x > 0:
 			self.status = 'right'
@@ -240,7 +248,7 @@ class Player(pygame.sprite.Sprite):
 			if len(self.status) < 6:
 				if self.direction.y == 0:
 					self.status += '_idle'
-		
+				
 		# adding attack to status
 		if not self.dead:
 			if self.charge or self.stop:
@@ -249,10 +257,14 @@ class Player(pygame.sprite.Sprite):
 					self.status += '_attack'
 			else:
 				self.status = self.status.replace('_attack', '')
-		
+			
 		# dead status
 		if self.dead:
 			self.status = 'dead'
+
+			
+
+		print(self.status)
 
 	def animate(self):
 		# animation
@@ -270,6 +282,9 @@ class Player(pygame.sprite.Sprite):
 
 		if self.energy_boost_animation:
 			self.energy_boost_particle.one_time_animation()
+		
+		if self.spawning:
+			self.spawn_animation.one_time_animation()
 
 	def draw_weapon(self):
 		# draw weapon

@@ -20,6 +20,7 @@ class Particle(pygame.sprite.Sprite):
 		self.index = 0
 		self.animation_speed = 0.15
 
+
 	def add_frames(self, count, sheet):
 		index = 0
 		for i in range(count):
@@ -34,13 +35,20 @@ class Particle(pygame.sprite.Sprite):
 		self.rect.center = self.player.rect.center
 
 		if self.index <= len(self.frames):
+			if self.type == 'spawn':
+				if int(self.index) in (3,4,5):
+					for image in self.player.frames['down_idle']:
+						image.set_alpha(255)
 			self.image = self.frames[int(self.index)]
 			self.index += self.animation_speed
+		
 		else:
 			if self.type == 'health':
 				self.player.heal_animation = False
 			elif self.type == 'energy':
 				self.player.energy_boost_animation = False
+			elif self.type == 'spawn':
+				self.player.spawning = False
 			self.added = False
 			self.index = 0
 			self.visible_sprites.remove(self)

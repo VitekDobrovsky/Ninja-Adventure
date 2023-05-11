@@ -10,6 +10,7 @@ class NinjaAdventure:
 		pygame.init()
 		pygame.font.init()
 		pygame.display.set_caption('Ninja Adventure')
+
 		self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 		self.clock = pygame.time.Clock()  
 		self.level = Level()
@@ -17,6 +18,7 @@ class NinjaAdventure:
 	def run(self):
 		# main loop
 		while True:
+			# event handler
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					pygame.quit()
@@ -25,6 +27,8 @@ class NinjaAdventure:
 			  
 			# updating
 			self.screen.fill('#71DDEE')
+				
+				# restart game
 			if not self.level.player.restart:
 				self.level.run()
 			else:
@@ -45,12 +49,15 @@ TODO:
 		enemy attack
 		kill bush
 		death
+		reset
 	
 	GRAPHICS:
 		dead sprites
-		dead text (and play again)
+		dead text (and play again) - implwement skull in it
 
 	fix:
+		-5 hp bug
+		
 
 	OTHER:
 		better gameplay
