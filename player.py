@@ -62,6 +62,7 @@ class Player(pygame.sprite.Sprite):
 		self.spawn_sheet = Sprite_sheet('graphics/player/Spawn.png', (32,32), (128,128))
 		self.spawn_animation = Particle(self, self.spawn_sheet, self.visible_sprites, 6, 'spawn')
 
+
 		# heal animation
 		self.heal_sheet = Sprite_sheet('graphics/player/Heal.png', (32, 32), (128, 128))
 		self.heal_particle = Particle(self, self.heal_sheet, self.visible_sprites, 3, 'health')
@@ -77,6 +78,7 @@ class Player(pygame.sprite.Sprite):
 		self.energy = player_stats['energy']
 		self.coins = 0 
 		self.dead = False
+		self.dead_time = None
 
 		# take_damage
 		self.vulnerable = True 
@@ -110,58 +112,68 @@ class Player(pygame.sprite.Sprite):
 		self.stop_time = None
 
 		# other
+		self.want_restart = False
 		self.restart = False
 		self.spawning = True
+		self.restart_time = None
+		self.paralized = True
+		self.startet_time = False
 
 	def input(self):
 		keys = pygame.key.get_pressed()
 		if not self.dead:
-			# evet handler
-			if keys[pygame.K_w]:
-				self.direction.y = -1
-			elif keys[pygame.K_s]:
-				self.direction.y = 1
-			else:
-				self.direction.y = 0
-
-			if keys[pygame.K_d]:
-				self.direction.x = 1
-			elif keys[pygame.K_a]:
-				self.direction.x = -1
-			else:
-				self.direction.x = 0
-
-			if keys[pygame.K_SPACE] and self.can_attack and self.energy >= 5:
-				# attack cooldown
-				self.attack = True
-				self.attack_time = pygame.time.get_ticks()
-				self.can_attack = False
-
-				# subtract player energy
-				if self.energy > 1:
-					self.energy -= 5
+			if not self.paralized:
+				# evet handler
+				if keys[pygame.K_w]:
+					self.direction.y = -1
+				elif keys[pygame.K_s]:
+					self.direction.y = 1
 				else:
-					self.energy = 0
+					self.direction.y = 0
 
-				# charge cooldown
-				self.charge = True
-				self.charge_time = pygame.time.get_ticks()
-
-				# stop after charge
-				self.stop = True 
-				self.stop_time = pygame.time.get_ticks()
-
-			if keys[pygame.K_r] and self.can_change_weapon:
-				if self.weapon_index < 1:
-					self.weapon_index += 1
+				if keys[pygame.K_d]:
+					self.direction.x = 1
+				elif keys[pygame.K_a]:
+					self.direction.x = -1
 				else:
-					self.weapon_index = 0
+					self.direction.x = 0
 
-				self.change_weapon_time = pygame.time.get_ticks()
-				self.can_change_weapon = False
+				if keys[pygame.K_SPACE] and self.can_attack and self.energy >= 5:
+					# attack cooldown
+					self.attack = True
+					self.attack_time = pygame.time.get_ticks()
+					self.can_attack = False
+
+					# subtract player energy
+					if self.energy > 1:
+						self.energy -= 5
+					else:
+						self.energy = 0
+
+					# charge cooldown
+					self.charge = True
+					self.charge_time = pygame.time.get_ticks()
+
+					# stop after charge
+					self.stop = True 
+					self.stop_time = pygame.time.get_ticks()
+
+				if keys[pygame.K_r] and self.can_change_weapon:
+					if self.weapon_index < 1:
+						self.weapon_index += 1
+					else:
+						self.weapon_index = 0
+
+					self.change_weapon_time = pygame.time.get_ticks()
+					self.can_change_weapon = False
 		else:
-			if keys[pygame.K_SPACE]:
-				self.restart = True
+			if keys[pygame.K_SPACE] and not self.want_restart:
+				current_time = pygame.time.get_ticks()
+				print(current_time - self.dead_time)
+				if current_time - self.dead_time >= 500:
+					self.restart_time = pygame.time.get_ticks()
+					self.want_restart = True
+					print(12)
 
 	def move(self):
 		# normalize direction
@@ -262,10 +274,6 @@ class Player(pygame.sprite.Sprite):
 		if self.dead:
 			self.status = 'dead'
 
-			
-
-		print(self.status)
-
 	def animate(self):
 		# animation
 		animation = self.frames[self.status]
@@ -333,8 +341,19 @@ class Player(pygame.sprite.Sprite):
 	def is_dead(self):
 		if self.health <= 0:
 			self.dead = True
+			if not self.startet_time:
+				self.dead_time = pygame.time.get_ticks()
+				self.startet_time = True
 		else:
 			self.dead = False
+	
+	def restarting(self):
+		if self.want_restart:
+			current_time = pygame.time.get_ticks()
+			# need to animate back dead text
+			# despawn player (same animation as spawn but backwards)
+			if current_time - self.restart_time >= 1000:
+				self.restart = True
 
 	def reset(self):
 		pass
@@ -350,4 +369,5 @@ class Player(pygame.sprite.Sprite):
 		#self.normalize_energy()
 		self.draw_weapon()
 		self.animate()
+		self.restarting()
 		

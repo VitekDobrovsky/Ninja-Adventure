@@ -69,7 +69,8 @@ class Level:
 
 		# enemy damage
 		self.enemy_count = 0
-		
+
+		# clear text		
 		self.t_clear_sheet = Sprite_sheet('graphics/GUI/clear_text_sheet.png', (41, 16), (41 * 11, 16 * 9))
 		self.t_clear_image = self.t_clear_sheet.get_image(0,0)
 		self.t_clear_rect = self.t_clear_image.get_rect(center=(WIDTH / 2, HEIGHT / 4))
@@ -81,6 +82,25 @@ class Level:
 								self.t_clear_sheet.get_image(3,0), self.t_clear_sheet.get_image(4,0)]
 
 		self.clear_tm = 0
+
+		# you died text
+		self.death_text_sheet = Sprite_sheet('graphics/GUI/You_died.png', (72, 25), ((72 * 9, 25 * 7)))
+		self.death_text_img = self.death_text_sheet.get_image(0,0)
+		self.death_text_rect = self.death_text_img.get_rect(center=(WIDTH / 2, HEIGHT / 4))
+
+		self.death_text_index = 0
+		self.death_text_speed = 0.05
+
+		self.death_text_frames = [self.death_text_sheet.get_image(0,0), self.death_text_sheet.get_image(1,0), self.death_text_sheet.get_image(2,0), 
+			    					self.death_text_sheet.get_image(3,0), self.death_text_sheet.get_image(4,0), ]
+
+		# play again text
+		self.font = pygame.font.Font('graphics/fonts/font.ttf' ,20)
+		self.playagain_txt = self.font.render('press space to play again',True, (225,225,225))
+		self.playagain_rect = self.playagain_txt.get_rect(midtop=self.death_text_rect.midbottom)
+		self.playagain_txt.set_alpha(0)
+		self.playagain_alpha = 0
+
 
 		# chests
 		self.chests = {
@@ -472,6 +492,27 @@ class Level:
 			else:
 				self.t_clear_animate = False
 
+	def death_text(self):
+		if self.player.dead:
+			self.screen.blit(self.death_text_img, self.death_text_rect)
+			self.screen.blit(self.playagain_txt, self.playagain_rect)
+			if self.death_text_index <= 2:
+				self.playagain_alpha += 7
+				self.playagain_txt.set_alpha(self.playagain_alpha)
+				self.death_text_index += self.death_text_speed
+				self.death_text_img = self.death_text_frames[int(self.death_text_index)]
+			
+
+			if int(self.death_text_index) >= 2:
+				if self.player.want_restart:
+					if self.death_text_index <= 4:
+						self.playagain_alpha -= 10
+						self.playagain_txt.set_alpha(self.playagain_alpha)
+						self.death_text_index += self.death_text_speed
+						self.death_text_img = self.death_text_frames[int(self.death_text_index)]
+					else:
+						self.death_text_img.set_alpha(0)
+
 	def clear_island(self):
 		if self.enemy_count == 0:
 			self.clear = True
@@ -489,6 +530,7 @@ class Level:
 		self.trap_in_level()
 		self.draw_gui()
 		self.clear_text()
+		self.death_text()
 
 class Camera(pygame.sprite.Group):
 	def __init__(self):

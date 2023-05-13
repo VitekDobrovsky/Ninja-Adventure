@@ -53,13 +53,16 @@ TODO:
 	
 	GRAPHICS:
 		dead sprites
-		dead text (and play again) - implwement skull in it
+		dead text (and play again) - implement skull in it
 
 	fix:
 		-5 hp bug
-		
+		fix that you can restart immediately after death
+		and animate after restartw
 
 	OTHER:
 		better gameplay
 		main menu
+		get rid of other weapon
+		sync text
 '''

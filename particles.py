@@ -37,8 +37,10 @@ class Particle(pygame.sprite.Sprite):
 		if self.index <= len(self.frames):
 			if self.type == 'spawn':
 				if int(self.index) in (3,4,5):
+					self.player.paralized = False
 					for image in self.player.frames['down_idle']:
 						image.set_alpha(255)
+			
 			self.image = self.frames[int(self.index)]
 			self.index += self.animation_speed
 		
