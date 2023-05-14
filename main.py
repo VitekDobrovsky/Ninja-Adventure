@@ -64,5 +64,4 @@ TODO:
 		better gameplay
 		main menu
 		get rid of other weapon
-		sync text
 '''

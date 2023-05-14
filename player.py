@@ -62,6 +62,10 @@ class Player(pygame.sprite.Sprite):
 		self.spawn_sheet = Sprite_sheet('graphics/player/Spawn.png', (32,32), (128,128))
 		self.spawn_animation = Particle(self, self.spawn_sheet, self.visible_sprites, 6, 'spawn')
 
+		# death animation
+		self.spawn_sheet = Sprite_sheet('graphics/player/Spawn.png', (32,32), (128,128))
+		self.death_animation = Particle(self, self.spawn_sheet, self.visible_sprites, 6, 'death')
+		self.can_animate_death = False
 
 		# heal animation
 		self.heal_sheet = Sprite_sheet('graphics/player/Heal.png', (32, 32), (128, 128))
@@ -171,9 +175,10 @@ class Player(pygame.sprite.Sprite):
 				current_time = pygame.time.get_ticks()
 				print(current_time - self.dead_time)
 				if current_time - self.dead_time >= 500:
+					self.can_animate_death = True
 					self.restart_time = pygame.time.get_ticks()
 					self.want_restart = True
-					print(12)
+
 
 	def move(self):
 		# normalize direction
@@ -288,11 +293,18 @@ class Player(pygame.sprite.Sprite):
 		if self.heal_animation:
 			self.heal_particle.one_time_animation()
 
+		# energy boost animation
 		if self.energy_boost_animation:
 			self.energy_boost_particle.one_time_animation()
 		
+		# spaw animation
 		if self.spawning:
 			self.spawn_animation.one_time_animation()
+
+		# restart animation
+		if self.can_animate_death:
+			self.death_animation.one_time_animation()
+
 
 	def draw_weapon(self):
 		# draw weapon
