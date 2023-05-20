@@ -2,6 +2,7 @@ import pygame
 from os import walk
 from csv import reader
 from math import sin
+from settings import *
 
 # get multiple images from folder
 def  import_folder(path):
@@ -67,3 +68,53 @@ class Sprite_sheet:
 		image.set_colorkey((0, 0, 0))
 		return image
 
+# button
+class Button:
+	def __init__(self,font,text,pos,color_of_text,overlay_color):
+		self.font = font
+		self.str = text
+		self.text = font.render(text,True,color_of_text)
+		self.rect = self.text.get_rect(center=pos)
+		self.area = self.rect.inflate(10,10)
+		self.area.center = self.rect.center
+		self.overlay_clr = overlay_color
+
+
+		self.selected = False
+		self.pressed = False
+
+		self.color = None
+	
+	def is_hovering(self):
+		hovering = False
+		if self.area.collidepoint(pygame.mouse.get_pos()):
+			hovering = True
+		return hovering
+
+	def fill_on_hover(self,display):
+		if self.is_hovering():
+			area = pygame.Surface((self.area.width, self.area.height))
+			area.fill(self.overlay_clr)
+			display.blit(area, self.area)
+			self.text = self.font.render(self.str,True,'#4ca5b5')
+			self.color = '#4ca5b5'
+		else:
+			self.text = self.font.render(self.str,True,'white')
+			self.color = 'white'
+
+	def activated(self,display):
+		if self.selected:
+			area = pygame.Surface((self.area.width, self.area.height))
+			area.fill('#ffad5d')
+			area.fill('#ffe18d', area.get_rect().inflate(-10, -10))
+			self.text = self.font.render(self.str,True,'white')
+			display.blit(area, self.area)
+
+	def render(self,display):
+		if not self.selected:
+			self.fill_on_hover(display)
+		self.activated(display)
+	
+		display.blit(self.text, self.rect)
+
+	
