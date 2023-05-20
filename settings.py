@@ -26,17 +26,46 @@ player_stats = {
 
 # enemies
 ENEMY_HEALTH = {
-	'Bamboo': 90,
-	'Racoon': 90,
-	'Reptile': 120,
-	'Spirit_fire': 60
+	'easy' : { 
+		'Bamboo': 70,
+		'Racoon': 70,
+		'Reptile': 80,
+		'Spirit_fire': 40
+	},
+    	'normal' : { 
+		'Bamboo': 80,
+		'Racoon': 80,
+		'Reptile': 90,
+		'Spirit_fire': 50
+	},
+    	'hard' : { 
+		'Bamboo': 90,
+		'Racoon': 90,
+		'Reptile': 100,
+		'Spirit_fire': 60
+	}
 }
 
 ENEMY_DAMAGE = {
-	'Bamboo': 5,
-	'Racoon': 10,
-	'Reptile': 15,
-	'Spirit_fire': 5
+    'easy': {
+		'Bamboo': 2,
+		'Racoon': 5,
+		'Reptile': 5,
+		'Spirit_fire': 2
+        },
+    'normal': {
+		'Bamboo': 5,
+		'Racoon': 7,
+		'Reptile': 7,
+		'Spirit_fire': 4
+        },
+    'hard': {
+		'Bamboo': 5,
+		'Racoon': 10,
+		'Reptile': 15,
+		'Spirit_fire': 5
+        },
+
 }
 
 

@@ -5,7 +5,7 @@ from random import randint
 
 
 class Enemy(pygame.sprite.Sprite):
-	def __init__(self, pos, groups, type, obstacle_sprites, player, speed):
+	def __init__(self, pos, groups, type, obstacle_sprites, player, speed,dificulty):
 		super().__init__(groups)
 		# sprite sheet
 		path = 'graphics/monsters/' + type + '.png'
@@ -53,7 +53,7 @@ class Enemy(pygame.sprite.Sprite):
 			}
 
 		# stats
-		self.health = ENEMY_HEALTH[type]
+		self.health = ENEMY_HEALTH[dificulty][type]
 
 		# attack
 		self.can_attack = False

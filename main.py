@@ -138,7 +138,7 @@ class NinjaAdventure:
 			else:
 				# restart game
 				if not self.level.player.restart:
-					self.level.run()
+					self.level.run(self.dificulty)
 				else:
 					self.level = Level()
 

@@ -210,7 +210,7 @@ class Level:
 
 		return current
 
-	def trap_in_level(self):
+	def trap_in_level(self, dificulty):
 		current = self.get_island()
 		
 		if current == 'middle' and not self.traped1:
@@ -221,7 +221,7 @@ class Level:
 				index += 1
 			
 			# enemies set up for island
-			self.spawn_enemies()
+			self.spawn_enemies(dificulty)
 			self.count_enemies()
 
 			self.traped1 = True
@@ -236,7 +236,7 @@ class Level:
 				index += 1
 			
 			# enemies set up for island
-			self.spawn_enemies()
+			self.spawn_enemies(dificulty)
 			self.count_enemies()
 
 			self.traped2 = True
@@ -251,7 +251,7 @@ class Level:
 				index += 1
 			
 			# enemies set up for island
-			self.spawn_enemies()
+			self.spawn_enemies(dificulty)
 			self.count_enemies()
 
 			self.traped3 = True
@@ -266,7 +266,7 @@ class Level:
 				index += 1
 			
 			# enemies set up for island
-			self.spawn_enemies()
+			self.spawn_enemies(dificulty)
 			self.count_enemies()
 
 			self.traped4 = True
@@ -316,7 +316,7 @@ class Level:
 		for enemy in self.enemy.sprites():
 			self.enemy_count += 1
 
-	def spawn_enemies(self):
+	def spawn_enemies(self,dificulty):
 		# current island
 		current = self.get_island()
 
@@ -325,14 +325,14 @@ class Level:
 			index = 0
 			for g in range(3):
 				pos = self.enemies['middle']['Bamboo'][index]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index, dificulty)
 				self.enemy_speed_index += 0.5
 				index += 1
 
 			index = 0
 			for l in range(2):
 				pos = self.enemies['middle']['Racoon'][index]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index, dificulty)
 				self.enemy_speed_index += 0.5
 				index += 1
 				
@@ -345,14 +345,14 @@ class Level:
 			index = 0
 			for a in range(2):
 				pos = self.enemies['top']['Racoon'][index]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index, dificulty)
 				self.enemy_speed_index += 0.5
 				index += 1
 
 			index = 0
 			for b in range(3):
 				pos = self.enemies['top']['Spirit_fire'][index]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Spirit_fire', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Spirit_fire', self.obstacle_sprites, self.player, self.enemy_speed_index, dificulty)
 				self.enemy_speed_index += 0.5
 				index += 1
 
@@ -364,7 +364,7 @@ class Level:
 			index = 0
 			for c in range(2):
 				pos = self.enemies['left']['Racoon'][index]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Racoon', self.obstacle_sprites, self.player, self.enemy_speed_index, dificulty)
 				self.enemy_speed_index += 0.5
 				self.enemy_speed_index = 1
 				index += 1
@@ -372,7 +372,7 @@ class Level:
 			index = 0
 			for d in range(3):
 				pos = self.enemies['left']['Reptile'][index]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player, self.enemy_speed_index, dificulty)
 				self.enemy_speed_index += 0.5
 				index += 1
 
@@ -384,14 +384,14 @@ class Level:
 			index = 0
 			for e in range(2):
 				pos = self.enemies['right']['Bamboo'][index]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Bamboo', self.obstacle_sprites, self.player, self.enemy_speed_index, dificulty)
 				self.enemy_speed_index += 0.5
 				index += 1
 
 			index = 0
 			for f in range(3):
 				pos = self.enemies['right']['Reptile'][index]
-				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player, self.enemy_speed_index)
+				Enemy(pos, [self.visible_sprites, self.enemy], 'Reptile', self.obstacle_sprites, self.player, self.enemy_speed_index, dificulty)
 				self.enemy_speed_index += 0.5
 				index += 1 
 
@@ -422,11 +422,11 @@ class Level:
 						
 
 	# PLAYER
-	def damage_player(self):
+	def damage_player(self,dificulty):
 		if not self.player.dead:
 			for enemy in self.enemy.sprites():
 				if enemy.can_attack and self.player.vulnerable and enemy.direction == (0,0):
-					self.player.health -= ENEMY_DAMAGE[enemy.type]
+					self.player.health -= ENEMY_DAMAGE[dificulty][enemy.type]
 					self.player.vulnerable = False
 					self.player.damage_time = pygame.time.get_ticks()
 
@@ -518,16 +518,16 @@ class Level:
 			self.clear = True
 
 	# RUN
-	def run(self):
+	def run(self,dificulty):
 		self.visible_sprites.custom_draw(self.player)
 		self.visible_sprites.update()
 		self.input()
 		self.clear_island()
 		self.kill_enemy()
-		self.damage_player()
+		self.damage_player(dificulty)
 		self.baricade_animations()
 		self.create_chests()
-		self.trap_in_level()
+		self.trap_in_level(dificulty)
 		self.draw_gui()
 		self.clear_text()
 		self.death_text()
