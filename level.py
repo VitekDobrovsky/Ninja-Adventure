@@ -95,9 +95,9 @@ class Level:
 			    					self.death_text_sheet.get_image(3,0), self.death_text_sheet.get_image(4,0), ]
 
 		# play again text
-		self.font = pygame.font.Font('graphics/fonts/font.ttf' ,20)
+		self.font = pygame.font.Font('graphics/fonts/Gameplay.ttf' ,30)
 		self.playagain_txt = self.font.render('press space to play again',True, (225,225,225))
-		self.playagain_rect = self.playagain_txt.get_rect(midtop=self.death_text_rect.midbottom)
+		self.playagain_rect = self.playagain_txt.get_rect(midtop=(self.death_text_rect.centerx,self.death_text_rect.y + 200))
 		self.playagain_txt.set_alpha(0)
 		self.playagain_alpha = 0
 

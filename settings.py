@@ -10,7 +10,7 @@ FPS      = 60
 TILESIZE = 64
 
 # bars
-BAR_HEIGHT = 20
+BAR_HEIGHT = 30
 FRAME_BAR_HEIGHT = 20
 
 # COLOR
@@ -39,10 +39,10 @@ ENEMY_HEALTH = {
 		'Spirit_fire': 50
 	},
     	'hard' : { 
-		'Bamboo': 90,
-		'Racoon': 90,
-		'Reptile': 100,
-		'Spirit_fire': 60
+		'Bamboo': 100,
+		'Racoon': 100,
+		'Reptile': 110,
+		'Spirit_fire': 80
 	}
 }
 
@@ -60,10 +60,10 @@ ENEMY_DAMAGE = {
 		'Spirit_fire': 4
         },
     'hard': {
-		'Bamboo': 5,
-		'Racoon': 10,
+		'Bamboo': 7,
+		'Racoon': 13,
 		'Reptile': 15,
-		'Spirit_fire': 5
+		'Spirit_fire': 7
         },
 
 }

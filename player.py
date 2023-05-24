@@ -377,7 +377,7 @@ class Player(pygame.sprite.Sprite):
 		self.add_energy()
 		self.move()
 		self.get_status()
-		#self.normalize_health()
+		self.normalize_health()
 		#self.normalize_energy()
 		self.draw_weapon()
 		self.animate()

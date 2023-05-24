@@ -170,9 +170,6 @@ TODO:
 		and animate after restartw
 
 	OTHER:
-		better gameplay
 		pause menu
-		main menu
-		get rid of other weapon
 		chose diferent font to play again text and center it
 '''
